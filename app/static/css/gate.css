@@ -1,0 +1,223 @@
+﻿.topbar {
+    min-height: 78px;
+    padding: 16px 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--sams-navy);
+    color: white;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.brand-icon {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    background: var(--sams-teal);
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.brand-text strong, .brand-text small {
+    display: block;
+}
+
+.brand-text strong {
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.brand-text small {
+    margin-top: 4px;
+    color: #cbd5e1;
+    font-size: 12px;
+}
+
+.home-link {
+    color: white;
+    text-decoration: none;
+}
+
+.gate-container {
+    width: min(100% - 32px, 540px);
+    margin: 48px auto 24px;
+}
+
+.intro {
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+.intro-icon {
+    width: 66px;
+    height: 66px;
+    margin: 0 auto 18px;
+    display: grid;
+    place-items: center;
+    border-radius: 20px;
+    background: #ccfbf1;
+    color: #0f766e;
+    font-size: 32px;
+}
+
+.eyebrow {
+    color: var(--sams-teal);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.intro h1 {
+    margin: 10px 0;
+    font-size: clamp(28px, 6vw, 38px);
+}
+
+.intro-text {
+    max-width: 390px;
+    margin: 0 auto;
+    color: var(--sams-muted);
+    line-height: 1.7;
+}
+
+.checkin-card {
+    padding: 30px;
+    border: 1px solid var(--sams-border);
+    border-radius: 22px;
+    background: white;
+    box-shadow: 0 18px 50px rgb(20 43 74 / 7%);
+}
+
+.checkin-card h2 {
+    margin: 0 0 8px;
+}
+
+.card-description {
+    margin-bottom: 26px;
+    color: var(--sams-muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.checkin-card label {
+    display: block;
+    margin-bottom: 9px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.checkin-card input {
+    width: 100%;
+    min-height: 54px;
+    padding: 14px 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 11px;
+    background: #fbfdff;
+    color: var(--sams-text);
+    font-size: 17px;
+    outline: none;
+}
+
+.checkin-card input:focus {
+    border-color: var(--sams-blue);
+    box-shadow: 0 0 0 4px rgb(37 99 235 / 10%);
+}
+
+.field-hint {
+    margin: 9px 0 22px;
+    color: var(--sams-muted);
+    font-size: 12px;
+}
+
+.checkin-button {
+    width: 100%;
+    min-height: 54px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: none;
+    border-radius: 11px;
+    background: var(--sams-blue);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.checkin-button:hover {
+    background: #1d4ed8;
+}
+
+.alert {
+    margin-bottom: 22px;
+    padding: 14px 16px;
+    border-radius: 11px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.alert.success {
+    background: var(--sams-success-bg);
+    color: var(--sams-success);
+}
+
+.alert.error {
+    background: var(--sams-error-bg);
+    color: var(--sams-error);
+}
+
+.help-note {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 17px;
+    border-radius: 13px;
+    background: #eaf2ff;
+    color: #334155;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.help-note p {
+    margin: 0;
+}
+
+.page-footer {
+    padding: 24px 12px;
+    color: var(--sams-muted);
+    text-align: center;
+    font-size: 12px;
+}
+
+@media (max-width: 480px) {
+    .topbar {
+        padding: 14px 18px;
+    }
+
+    .brand-text strong {
+        font-size: 17px;
+    }
+
+    .brand-text small {
+        max-width: 180px;
+        line-height: 1.5;
+    }
+
+    .gate-container {
+        margin-top: 32px;
+    }
+
+    .checkin-card {
+        padding: 22px;
+    }
+}

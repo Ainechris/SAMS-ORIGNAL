@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | SAMS</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-page">
+
+<div class="admin-layout">
+    <aside class="sidebar">
+        <a class="admin-brand" href="{{ url_for('admin.dashboard') }}">
+            <span class="brand-icon">S</span>
+            <span><strong>SAMS</strong><small>Administration</small></span>
+        </a>
+
+        <p class="nav-heading">WORKSPACE</p>
+
+        <nav class="sidebar-nav">
+            <a class="nav-link active" href="{{ url_for('admin.dashboard') }}">
+                <span>▦</span> Overview
+            </a>
+            <a class="nav-link" href="#students">
+                <span>♙</span> Students
+            </a>
+            <a class="nav-link" href="#attendance">
+                <span>✓</span> Attendance
+            </a>
+            <a class="nav-link" href="#teachers">
+                <span>♧</span> Teachers
+            </a>
+            <a class="nav-link" href="#reports">
+                <span>▤</span> Reports
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <p>School Attendance Management System</p>
+            <a href="{{ url_for('main.home') }}">← Back to home</a>
+            <a href="{{ url_for('gate.gate') }}">Open student gate</a>
+        </div>
+    </aside>
+
+    <main class="dashboard-main">
+        <header class="dashboard-header">
+            <div>
+                <p class="eyebrow">SCHOOL MANAGEMENT</p>
+                <h1>Admin Dashboard</h1>
+                <p class="subtitle">Your school's attendance at a glance.</p>
+            </div>
+            <div class="admin-badge">
+                <span class="status-dot"></span>
+                Dashboard
+            </div>
+        </header>
+
+        <section class="welcome-banner">
+            <div>
+                <p class="welcome-label">ADMINISTRATION OVERVIEW</p>
+                <h2>Welcome to SAMS</h2>
+                <p>Monitor student attendance and check-in activity.</p>
+            </div>
+            <div class="welcome-symbol" aria-hidden="true">✓</div>
+        </section>
+
+        <section class="stats-grid" aria-label="Today's statistics">
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span>Total students</span>
+                    <span class="stat-icon blue">♙</span>
+                </div>
+                <p class="stat-number">{{ total_students }}</p>
+                <p class="stat-note">Registered student records</p>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span>Present today</span>
+                    <span class="stat-icon green">✓</span>
+                </div>
+                <p class="stat-number">{{ present_today }}</p>
+                <p class="stat-note">Recorded as present today</p>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span>Not checked in</span>
+                    <span class="stat-icon orange">◷</span>
+                </div>
+                <p class="stat-number">{{ absent_today }}</p>
+                <p class="stat-note">No present check-in recorded</p>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span>Attendance rate</span>
+                    <span class="stat-icon purple">%</span>
+                </div>
+                <p class="stat-number">{{ attendance_rate }}%</p>
+                <p class="stat-note">Present today ÷ total students</p>
+            </article>
+        </section>
+
+        <section class="content-card" id="attendance">
+            <div class="section-header">
+                <div>
+                    <h2>Today's check-ins</h2>
+                    <p>Latest attendance records for today.</p>
+                </div>
+                <span class="record-count">
+                    {{ recent_attendance|length }} records shown
+                </span>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Student ID</th>
+                            <th>Class</th>
+                            <th>Check-in time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in recent_attendance %}
+                        <tr>
+                            <td class="student-name">{{ record.full_name }}</td>
+                            <td>{{ record.student_id }}</td>
+                            <td>{{ record.class_name }}</td>
+                            <td>{{ record.check_in_time }}</td>
+                            <td>
+                                <span class="status-pill
+                                    {% if record.status == 'Present' %}
+                                        present
+                                    {% else %}
+                                        other-status
+                                    {% endif %}">
+                                    {{ record.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="empty-state">
+                                <span class="empty-icon">◷</span>
+                                <strong>No check-ins yet today</strong>
+                                <p>Student attendance records will appear here.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="quick-actions" id="students">
+            <div>
+                <h2>Quick access</h2>
+                <p>Jump to an existing part of your system.</p>
+            </div>
+            <a class="action-card" href="{{ url_for('gate.gate') }}">
+                <span class="action-icon">✓</span>
+                <span><strong>Student gate</strong><small>Open check-in page</small></span>
+                <span class="action-arrow">→</span>
+            </a>
+            <a class="action-card" href="{{ url_for('main.home') }}">
+                <span class="action-icon">⌂</span>
+                <span><strong>Main home</strong><small>Return to SAMS home</small></span>
+                <span class="action-arrow">→</span>
+            </a>
+        </section>
+
+        <footer class="dashboard-footer">
+            SAMS · School Attendance Management System
+        </footer>
+    </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SAMS | School Attendance Management System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/base.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+
+<body class="home-page">
+
+    <header class="home-header">
+        <a href="{{ url_for('main.home') }}" class="home-brand">
+            <span class="home-logo">S</span>
+            <span>
+                <strong>SAMS</strong>
+                <small>School Attendance Management</small>
+            </span>
+        </a>
+
+        <nav class="home-nav" aria-label="Main navigation">
+            <a class="nav-active" href="{{ url_for('main.home') }}">
+                Home
+            </a>
+            <a href="{{ url_for('gate.gate') }}">
+                Student Gate
+            </a>
+            <a href="/admin/">
+                Admin
+            </a>
+        </nav>
+
+        <a class="header-action" href="{{ url_for('gate.gate') }}">
+            Check in <span aria-hidden="true">→</span>
+        </a>
+    </header>
+
+    <main>
+        <section class="home-hero">
+            <div class="hero-content">
+                <div class="system-label">
+                    <span class="status-dot"></span>
+                    SCHOOL ATTENDANCE SYSTEM
+                </div>
+
+                <h1>
+                    Every student.<br>
+                    <span>Every day.</span><br>
+                    Accounted for.
+                </h1>
+
+                <p class="hero-description">
+                    A smarter way to manage school attendance.
+                    Verify student identities, record daily check-ins,
+                    and make attendance information easier to access.
+                </p>
+
+                <div class="hero-actions">
+                    <a class="primary-action"
+                       href="{{ url_for('gate.gate') }}">
+                        <span>Go to Student Gate</span>
+                        <span aria-hidden="true">→</span>
+                    </a>
+
+                    <a class="secondary-action" href="/admin/">
+                        Admin Dashboard
+                    </a>
+                </div>
+
+                <div class="hero-trust">
+                    <span class="trust-icon" aria-hidden="true">✓</span>
+                    <span>Student IDs are verified against the database</span>
+                </div>
+            </div>
+
+            <div class="hero-visual" aria-label="Attendance workflow illustration">
+                <div class="visual-orbit orbit-one"></div>
+                <div class="visual-orbit orbit-two"></div>
+
+                <div class="visual-card">
+                    <div class="visual-card-header">
+                        <div>
+                            <span class="visual-eyebrow">SAMS SYSTEM</span>
+                            <h2>Student check-in</h2>
+                        </div>
+                        <span class="visual-symbol">S</span>
+                    </div>
+
+                    <div class="visual-student">
+                        <div class="student-avatar">ID</div>
+                        <div>
+                            <strong>Student identification</strong>
+                            <span>Enter your assigned student ID</span>
+                        </div>
+                    </div>
+
+                    <div class="visual-input">
+                        <span>Student ID</span>
+                        <strong>SAMS001</strong>
+                        <span class="input-check">✓</span>
+                    </div>
+
+                    <div class="visual-verification">
+                        <span class="verification-icon">✓</span>
+                        <div>
+                            <strong>Database verification</strong>
+                            <span>Identity checked before attendance</span>
+                        </div>
+                    </div>
+
+                    <div class="visual-bottom">
+                        <span class="visual-bottom-dot"></span>
+                        A simple, structured check-in process
+                    </div>
+                </div>
+
+                <div class="floating-tag tag-top">
+                    <span class="tag-icon">01</span>
+                    <span>
+                        <strong>Identify</strong>
+                        <small>Student ID</small>
+                    </span>
+                </div>
+
+                <div class="floating-tag tag-bottom">
+                    <span class="tag-icon">02</span>
+                    <span>
+                        <strong>Record</strong>
+                        <small>Daily attendance</small>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <section class="home-features">
+            <div class="section-heading">
+                <div>
+                    <span class="section-eyebrow">EXPLORE SAMS</span>
+                    <h2>Everything starts here.</h2>
+                    <p>Choose the area you need to access.</p>
+                </div>
+
+                <span class="section-count">01 — 03</span>
+            </div>
+
+            <div class="feature-grid">
+                <a class="feature-card gate-feature"
+                   href="{{ url_for('gate.gate') }}">
+                    <div class="feature-top">
+                        <span class="feature-icon gate-icon">01</span>
+                        <span class="feature-arrow">↗</span>
+                    </div>
+
+                    <span class="feature-label">ATTENDANCE</span>
+                    <h3>Student Gate</h3>
+                    <p>
+                        Enter a student ID, verify the student against
+                        registered records, and record attendance.
+                    </p>
+                    <span class="feature-link">
+                        Open Student Gate <span>→</span>
+                    </span>
+                </a>
+
+                <a class="feature-card admin-feature" href="/admin/">
+                    <div class="feature-top">
+                        <span class="feature-icon admin-icon">02</span>
+                        <span class="feature-arrow">↗</span>
+                    </div>
+
+                    <span class="feature-label">MANAGEMENT</span>
+                    <h3>Admin Dashboard</h3>
+                    <p>
+                        Access attendance summaries, review check-ins,
+                        and manage school records as features are added.
+                    </p>
+                    <span class="feature-link">
+                        Open Admin <span>→</span>
+                    </span>
+                </a>
+
+                <div class="feature-card portal-feature">
+                    <div class="feature-top">
+                        <span class="feature-icon portal-icon">03</span>
+                        <span class="coming-soon">PLANNED</span>
+                    </div>
+
+                    <span class="feature-label">STUDENT SERVICES</span>
+                    <h3>Student Portal</h3>
+                    <p>
+                        A future space for students to check their
+                        attendance history and academic progress.
+                    </p>
+                    <span class="feature-link planned-link">
+                        Coming soon
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <section class="home-process">
+            <div class="process-copy">
+                <span class="section-eyebrow">HOW IT WORKS</span>
+                <h2>Simple for students.<br>Useful for the school.</h2>
+                <p>
+                    SAMS is designed around a clear process that connects
+                    student records with daily attendance.
+                </p>
+            </div>
+
+            <div class="process-steps">
+                <div class="process-step">
+                    <span class="step-number">01</span>
+                    <div>
+                        <h3>Enter student ID</h3>
+                        <p>The student provides their assigned ID.</p>
+                    </div>
+                </div>
+
+                <div class="process-step">
+                    <span class="step-number">02</span>
+                    <div>
+                        <h3>Verify identity</h3>
+                        <p>SAMS looks up the ID in the student database.</p>
+                    </div>
+                </div>
+
+                <div class="process-step">
+                    <span class="step-number">03</span>
+                    <div>
+                        <h3>Record attendance</h3>
+                        <p>Valid check-ins are saved to the attendance records.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="home-footer">
+        <a href="{{ url_for('main.home') }}" class="footer-brand">
+            SAMS<span>.</span>
+        </a>
+        <p>School Attendance Management System</p>
+        <a href="{{ url_for('gate.gate') }}">Student Gate →</a>
+    </footer>
+
+</body>
+</html>

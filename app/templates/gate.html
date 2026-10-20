@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Gate Check-in | SAMS</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/base.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/gate.css') }}">
+</head>
+
+<body>
+
+    <header class="topbar">
+        <a href="{{ url_for('main.home') }}" class="brand">
+            <span class="brand-icon">S</span>
+
+            <span class="brand-text">
+                <strong>SAMS</strong>
+                <small>School Attendance Management System</small>
+            </span>
+        </a>
+
+        <a href="{{ url_for('main.home') }}" class="home-link">
+            Home &larr;
+        </a>
+    </header>
+
+    <main class="gate-container">
+
+        <section class="intro">
+            <div class="intro-icon" aria-hidden="true">&#10003;</div>
+
+            <p class="eyebrow">STUDENT GATE CHECK-IN</p>
+
+            <h1>Welcome to school!</h1>
+
+            <p class="intro-text">
+                Start your school day by entering your student ID.
+                SAMS will verify your details before recording attendance.
+            </p>
+        </section>
+
+        <section class="checkin-card">
+
+            <h2>Record your attendance</h2>
+
+            <p class="card-description">
+                Enter the student ID registered with your school.
+            </p>
+
+            {% if message %}
+                <div class="alert {{ message_type }}"
+                     role="status"
+                     aria-live="polite">
+                    {{ message }}
+                </div>
+            {% endif %}
+
+            <form method="POST"
+                  action="{{ url_for('gate.gate') }}">
+
+                <label for="student_id">Student ID</label>
+
+                <input
+                    id="student_id"
+                    name="student_id"
+                    type="text"
+                    placeholder="e.g. SAMS001"
+                    maxlength="50"
+                    autocomplete="off"
+                    autocapitalize="characters"
+                    spellcheck="false"
+                    required
+                    autofocus
+                >
+
+                <p class="field-hint">
+                    Check your student ID before continuing.
+                </p>
+
+                <button type="submit" class="checkin-button">
+                    Record my attendance
+                    <span aria-hidden="true">&rarr;</span>
+                </button>
+
+            </form>
+
+            <aside class="help-note">
+                <span aria-hidden="true">&#9432;</span>
+
+                <p>
+                    Having trouble? Check your ID or ask your teacher
+                    or gate supervisor for assistance.
+                </p>
+            </aside>
+
+        </section>
+
+        <footer class="page-footer">
+            SAMS &copy; School Attendance Management System
+            <br>
+            Student check-in station
+        </footer>
+
+    </main>
+
+</body>
+</html>
