@@ -1,0 +1,13 @@
+{% extends "admin/shell.html" %}
+{% block document_title %}Activation code{% endblock %}
+{% block admin_content %}
+<a class="back-link" href="{{ url_for('admin_students.student_detail', student_pk=student_pk) }}">← Student record</a>
+<section class="content-card activation-code-card" aria-labelledby="activation-code-title">
+    <p class="section-kicker">PRIVATE STUDENT HANDOVER</p>
+    <h2 id="activation-code-title">One-time portal activation code</h2>
+    <p>Give this code directly to <strong>{{ student.full_name }}</strong> ({{ student.student_id }}). It expires in 14 days and can only be used once.</p>
+    <output class="activation-code">{{ activation_code }}</output>
+    <p class="activation-code-note">This code is shown only on this page. Do not send it in a public message or leave this screen visible.</p>
+    <a class="button-secondary" href="{{ url_for('admin_students.list_students') }}">Return to student directory</a>
+</section>
+{% endblock %}

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My attendance | SAMS Student Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/student.css') }}">
+</head>
+<body class="student-portal">
+<header class="student-header">
+    <a class="student-brand" href="{{ url_for('student.dashboard') }}"><span class="student-logo" aria-hidden="true">S</span><span><strong>SAMS</strong><small>Student portal</small></span></a>
+    <nav aria-label="Student account"><a href="{{ url_for('student.change_own_password') }}">Change password</a><form method="post" action="{{ url_for('student.logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit">Sign out</button></form></nav>
+</header>
+<main class="student-main">
+    <section class="student-welcome"><p class="auth-eyebrow">MY SCHOOL RECORD</p><h1>Welcome, {{ student.full_name }}</h1><p>{{ student.student_id }} <span aria-hidden="true">·</span> {{ student.class_name }}</p></section>
+    {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="auth-alert {{ category }}" role="status">{{ message }}</div>{% endfor %}{% endwith %}
+    <section class="student-stats" aria-label="Attendance summary">
+        <article><span>Total recorded check-ins</span><strong>{{ total }}</strong></article>
+        <article><span>Recorded this month</span><strong>{{ this_month }}</strong></article>
+    </section>
+    <section class="student-records" aria-labelledby="attendance-title">
+        <div class="student-section-heading"><div><p class="auth-eyebrow">ATTENDANCE</p><h2 id="attendance-title">My check-in history</h2></div><span>Latest 100 records</span></div>
+        <div class="student-table-wrap"><table><thead><tr><th scope="col">Date</th><th scope="col">Check-in time</th><th scope="col">Status</th></tr></thead><tbody>
+        {% for record in records %}<tr><td>{{ record.attendance_date }}</td><td>{{ record.check_in_time }}</td><td><span class="student-status">{{ record.status }}</span></td></tr>
+        {% else %}<tr><td colspan="3"><div class="student-empty"><strong>No check-ins recorded yet</strong><p>Your gate check-ins will appear here once recorded.</p></div></td></tr>{% endfor %}
+        </tbody></table></div>
+    </section>
+    <p class="student-privacy">This portal shows your own attendance information only. Contact the school office if something looks incorrect.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ login_title }} | SAMS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body class="auth-page role-{{ login_role }}">
+    <main class="auth-shell">
+        <a class="auth-brand" href="{{ url_for('main.home') }}">
+            <span class="auth-logo" aria-hidden="true">S</span>
+            <span><strong>SAMS</strong><small>School Attendance Management System</small></span>
+        </a>
+
+        <section class="auth-card" aria-labelledby="login-title">
+            <p class="auth-eyebrow">{% if login_role == 'admin' %}ADMINISTRATION{% elif login_role == 'student' %}STUDENT PORTAL{% else %}GATE OPERATIONS{% endif %}</p>
+            <h1 id="login-title">{{ login_title }}</h1>
+            <p class="auth-intro">{% if login_role == 'admin' %}Sign in with your administrator account to manage school attendance.{% elif login_role == 'student' %}Sign in to review your own attendance history.{% else %}Sign in with your individual staff account to operate the student gate.{% endif %}</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="auth-alert {{ category }}" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endwith %}
+
+            <form method="post" action="">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label for="username">{% if login_role == 'admin' %}Username{% elif login_role == 'student' %}Student ID{% else %}Staff username or ID{% endif %}</label>
+                <input id="username" name="{{ 'student_id' if login_role == 'student' else 'username' }}" type="text" maxlength="100" autocomplete="username" required autofocus>
+
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+                <button class="auth-submit" type="submit">Sign in <span aria-hidden="true">→</span></button>
+            </form>
+
+            <p class="auth-help">{% if login_role == 'admin' %}For access help, contact the SAMS system administrator.{% elif login_role == 'student' %}Need an account? <a href="{{ url_for('student.activate') }}">Activate your portal access</a>. Ask your school administrator for your one-time code.{% else %}For account access or a password reset, contact your administrator.{% endif %}</p>
+        </section>
+
+        <a class="auth-back" href="{{ url_for('main.home') }}">← Back to SAMS home</a>
+    </main>
+</body>
+</html>

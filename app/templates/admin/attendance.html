@@ -1,0 +1,22 @@
+{% extends "admin/shell.html" %}
+{% block document_title %}Attendance records{% endblock %}
+{% block admin_content %}
+<section class="content-card filters-card">
+    <form class="filter-form attendance-filters" method="get" action="{{ url_for('admin_students.attendance_records') }}">
+        <div><label for="attendance-date">Date</label><input id="attendance-date" type="date" name="date" value="{{ selected_date }}"></div>
+        <div><label for="attendance-search">Student</label><input id="attendance-search" type="search" name="q" value="{{ query }}" placeholder="Name or student ID"></div>
+        <div><label for="attendance-class">Class</label><select id="attendance-class" name="class"><option value="">All classes</option>{% for item in classes %}<option value="{{ item.class_name }}" {% if selected_class == item.class_name %}selected{% endif %}>{{ item.class_name }}</option>{% endfor %}</select></div>
+        <div><label for="session-filter">Session reference</label><input id="session-filter" type="text" name="session" value="{{ session_reference }}" maxlength="40" placeholder="Optional"></div>
+        <button class="button-primary" type="submit">Apply filters</button>
+        <a class="button-secondary" href="{{ url_for('admin_students.attendance_records') }}">Clear</a>
+    </form>
+</section>
+
+<section class="content-card admin-table-card">
+    <div class="section-header"><div><p class="section-kicker">ATTENDANCE REGISTER</p><h2>{{ total }} records</h2><p>Showing up to 200 records, newest first.</p></div></div>
+    <div class="table-wrapper"><table class="management-table"><thead><tr><th scope="col">Date</th><th scope="col">Student ID</th><th scope="col">Student name</th><th scope="col">Class</th><th scope="col">Check-in</th><th scope="col">Status</th><th scope="col">Gate session</th></tr></thead><tbody>
+        {% for record in records %}<tr><td>{{ record.attendance_date }}</td><td class="student-id">{{ record.student_id }}</td><td class="student-name">{{ record.full_name }}</td><td>{{ record.class_name }}</td><td>{{ record.check_in_time }}</td><td>{{ record.status }}</td><td>{{ record.session_reference or 'Historical record' }}</td></tr>
+        {% else %}<tr><td colspan="7"><div class="empty-state"><strong>No attendance records match these filters</strong><p>Choose another date or clear one of the filters.</p></div></td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+{% endblock %}

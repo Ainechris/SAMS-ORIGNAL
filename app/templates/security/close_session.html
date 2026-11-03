@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Close gate session | SAMS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body class="auth-page role-security">
+    <main class="auth-shell workflow-shell">
+        <a class="auth-brand" href="{{ url_for('security.dashboard') }}"><span class="auth-logo" aria-hidden="true">S</span><span><strong>SAMS</strong><small>Gate operations</small></span></a>
+        <section class="auth-card workflow-card" aria-labelledby="close-title">
+            <p class="auth-eyebrow">END OF SHIFT · {{ active_session.session_reference }}</p>
+            <h1 id="close-title">Close the gate session?</h1>
+            <p class="auth-intro">Closing this session immediately stops student check-ins. All attendance already recorded remains in the system. A closed session cannot be reopened.</p>
+            {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="auth-alert {{ category }}" role="alert">{{ message }}</div>{% endfor %}{% endwith %}
+            <form method="post" action="">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label class="accept-label"><input name="confirm_close" type="checkbox" value="yes" required><span>I understand that the kiosk will stop accepting check-ins.</span></label>
+                <button class="close-confirm-button" type="submit">Close gate session</button>
+            </form>
+            <a class="cancel-link" href="{{ url_for('security.dashboard') }}">Keep session open</a>
+        </section>
+        <a class="auth-back" href="{{ url_for('security.dashboard') }}">← Return to gate operations</a>
+    </main>
+</body>
+</html>

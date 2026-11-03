@@ -1,255 +1,138 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>SAMS | School Attendance Management System</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/base.css') }}">
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/home.css') }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>SAMS | School operations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
 </head>
-
 <body class="home-page">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
 
     <header class="home-header">
-        <a href="{{ url_for('main.home') }}" class="home-brand">
-            <span class="home-logo">S</span>
-            <span>
+        <a class="home-brand" href="{{ url_for('main.home') }}" aria-label="SAMS home">
+            <span class="home-logo" aria-hidden="true">S</span>
+            <span class="brand-copy">
                 <strong>SAMS</strong>
-                <small>School Attendance Management</small>
+                <small>School management</small>
             </span>
         </a>
 
         <nav class="home-nav" aria-label="Main navigation">
-            <a class="nav-active" href="{{ url_for('main.home') }}">
-                Home
-            </a>
-            <a href="{{ url_for('gate.gate') }}">
-                Student Gate
-            </a>
-            <a href="/admin/">
-                Admin
-            </a>
+            <a class="nav-active" href="{{ url_for('main.home') }}" aria-current="page">Home</a>
+            <a href="{{ url_for('gate.gate') }}">Student Gate</a>
+            <a href="{{ url_for('admin.login') }}">Administrator sign in</a>
+            <a href="{{ url_for('security.login') }}">Security sign in</a>
         </nav>
-
-        <a class="header-action" href="{{ url_for('gate.gate') }}">
-            Check in <span aria-hidden="true">→</span>
-        </a>
     </header>
 
-    <main>
-        <section class="home-hero">
-            <div class="hero-content">
-                <div class="system-label">
-                    <span class="status-dot"></span>
-                    SCHOOL ATTENDANCE SYSTEM
-                </div>
-
-                <h1>
-                    Every student.<br>
-                    <span>Every day.</span><br>
-                    Accounted for.
-                </h1>
-
-                <p class="hero-description">
-                    A smarter way to manage school attendance.
-                    Verify student identities, record daily check-ins,
-                    and make attendance information easier to access.
-                </p>
-
-                <div class="hero-actions">
-                    <a class="primary-action"
-                       href="{{ url_for('gate.gate') }}">
-                        <span>Go to Student Gate</span>
-                        <span aria-hidden="true">→</span>
-                    </a>
-
-                    <a class="secondary-action" href="/admin/">
-                        Admin Dashboard
-                    </a>
-                </div>
-
-                <div class="hero-trust">
-                    <span class="trust-icon" aria-hidden="true">✓</span>
-                    <span>Student IDs are verified against the database</span>
-                </div>
-            </div>
-
-            <div class="hero-visual" aria-label="Attendance workflow illustration">
-                <div class="visual-orbit orbit-one"></div>
-                <div class="visual-orbit orbit-two"></div>
-
-                <div class="visual-card">
-                    <div class="visual-card-header">
-                        <div>
-                            <span class="visual-eyebrow">SAMS SYSTEM</span>
-                            <h2>Student check-in</h2>
-                        </div>
-                        <span class="visual-symbol">S</span>
-                    </div>
-
-                    <div class="visual-student">
-                        <div class="student-avatar">ID</div>
-                        <div>
-                            <strong>Student identification</strong>
-                            <span>Enter your assigned student ID</span>
-                        </div>
-                    </div>
-
-                    <div class="visual-input">
-                        <span>Student ID</span>
-                        <strong>SAMS001</strong>
-                        <span class="input-check">✓</span>
-                    </div>
-
-                    <div class="visual-verification">
-                        <span class="verification-icon">✓</span>
-                        <div>
-                            <strong>Database verification</strong>
-                            <span>Identity checked before attendance</span>
-                        </div>
-                    </div>
-
-                    <div class="visual-bottom">
-                        <span class="visual-bottom-dot"></span>
-                        A simple, structured check-in process
-                    </div>
-                </div>
-
-                <div class="floating-tag tag-top">
-                    <span class="tag-icon">01</span>
-                    <span>
-                        <strong>Identify</strong>
-                        <small>Student ID</small>
-                    </span>
-                </div>
-
-                <div class="floating-tag tag-bottom">
-                    <span class="tag-icon">02</span>
-                    <span>
-                        <strong>Record</strong>
-                        <small>Daily attendance</small>
-                    </span>
-                </div>
-            </div>
+    <main id="main-content" class="home-main">
+        <section class="page-intro" aria-labelledby="page-title">
+            <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> SCHOOL OPERATIONS</p>
+            <h1 id="page-title">Where would you like to start?</h1>
+            <p class="intro-copy">Choose a school task or sign in to the workspace for your role.</p>
         </section>
 
-        <section class="home-features">
+        <section class="workspace-section" aria-labelledby="available-title">
             <div class="section-heading">
                 <div>
-                    <span class="section-eyebrow">EXPLORE SAMS</span>
-                    <h2>Everything starts here.</h2>
-                    <p>Choose the area you need to access.</p>
+                    <h2 id="available-title">Available workspaces</h2>
+                    <p>Open the kiosk or continue to a protected staff workspace.</p>
                 </div>
-
-                <span class="section-count">01 — 03</span>
+                <span class="section-count">04 available</span>
             </div>
 
-            <div class="feature-grid">
-                <a class="feature-card gate-feature"
-                   href="{{ url_for('gate.gate') }}">
-                    <div class="feature-top">
-                        <span class="feature-icon gate-icon">01</span>
-                        <span class="feature-arrow">↗</span>
+            <div class="workspace-grid">
+                <a class="workspace-card admin-card" href="{{ url_for('admin.login') }}">
+                    <div class="workspace-card-top">
+                        <span class="workspace-icon admin-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="11" width="7" height="10" rx="1.5"/><rect x="3" y="13" width="7" height="8" rx="1.5"/></svg>
+                        </span>
+                        <span class="availability"><i></i> Available</span>
                     </div>
+                    <p class="workspace-category">ADMINISTRATION</p>
+                    <h3>Administrator sign in</h3>
+                    <p class="workspace-description">Sign in to manage student records, security accounts, and attendance operations.</p>
+                    <span class="workspace-action">Continue to admin sign in <span aria-hidden="true">→</span></span>
+                    <span class="card-corner" aria-hidden="true">↗</span>
+                </a>
 
-                    <span class="feature-label">ATTENDANCE</span>
+                <a class="workspace-card security-card" href="{{ url_for('security.login') }}">
+                    <div class="workspace-card-top">
+                        <span class="workspace-icon security-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 3 20 6v5c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V6l8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+                        </span>
+                        <span class="availability"><i></i> Staff access</span>
+                    </div>
+                    <p class="workspace-category">GATE OPERATIONS</p>
+                    <h3>Security sign in</h3>
+                    <p class="workspace-description">Sign in with your individual staff account to control the gate session and handovers.</p>
+                    <span class="workspace-action">Continue to security sign in <span aria-hidden="true">→</span></span>
+                    <span class="card-corner" aria-hidden="true">↗</span>
+                </a>
+
+                <a class="workspace-card gate-card" href="{{ url_for('gate.gate') }}">
+                    <div class="workspace-card-top">
+                        <span class="workspace-icon gate-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 3v18m6-18v18M4 9h5m6 0h5M4 15h5m6 0h5"/></svg>
+                        </span>
+                        <span class="availability"><i></i> Available</span>
+                    </div>
+                    <p class="workspace-category">ATTENDANCE</p>
                     <h3>Student Gate</h3>
-                    <p>
-                        Enter a student ID, verify the student against
-                        registered records, and record attendance.
-                    </p>
-                    <span class="feature-link">
-                        Open Student Gate <span>→</span>
-                    </span>
+                    <p class="workspace-description">Verify a student ID and record the student’s daily check-in.</p>
+                    <span class="workspace-action">Open check-in screen <span aria-hidden="true">→</span></span>
+                    <span class="card-corner" aria-hidden="true">↗</span>
                 </a>
-
-                <a class="feature-card admin-feature" href="/admin/">
-                    <div class="feature-top">
-                        <span class="feature-icon admin-icon">02</span>
-                        <span class="feature-arrow">↗</span>
+                <a class="workspace-card student-card" href="{{ url_for('student.login') }}">
+                    <div class="workspace-card-top">
+                        <span class="workspace-icon student-planned-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20v-1.5a6 6 0 0 1 12 0V20m1-11h5m-2.5-2.5v5"/></svg>
+                        </span>
+                        <span class="availability"><i></i> Available</span>
                     </div>
-
-                    <span class="feature-label">MANAGEMENT</span>
-                    <h3>Admin Dashboard</h3>
-                    <p>
-                        Access attendance summaries, review check-ins,
-                        and manage school records as features are added.
-                    </p>
-                    <span class="feature-link">
-                        Open Admin <span>→</span>
-                    </span>
-                </a>
-
-                <div class="feature-card portal-feature">
-                    <div class="feature-top">
-                        <span class="feature-icon portal-icon">03</span>
-                        <span class="coming-soon">PLANNED</span>
-                    </div>
-
-                    <span class="feature-label">STUDENT SERVICES</span>
+                    <p class="workspace-category">STUDENT SERVICES</p>
                     <h3>Student Portal</h3>
-                    <p>
-                        A future space for students to check their
-                        attendance history and academic progress.
-                    </p>
-                    <span class="feature-link planned-link">
-                        Coming soon
+                    <p class="workspace-description">Sign in to review your own attendance history and account information.</p>
+                    <span class="workspace-action">Continue to student sign in <span aria-hidden="true">→</span></span>
+                    <span class="card-corner" aria-hidden="true">↗</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="planned-section" aria-labelledby="planned-title">
+            <div class="section-heading planned-heading">
+                <div>
+                    <h2 id="planned-title">Planned workspaces</h2>
+                    <p>These areas are not available yet.</p>
+                </div>
+                <span class="planned-count">01 planned</span>
+            </div>
+            <div class="planned-grid">
+                <article class="planned-card">
+                    <span class="planned-icon teacher-planned-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M3 4h18v12H3zM8 21h8m-4-5v5m-5-9 3-3 2 2 4-5"/></svg>
                     </span>
-                </div>
+                    <div class="planned-copy">
+                        <div class="planned-title-row"><h3>Teacher Workspace</h3><span class="planned-badge">Planned</span></div>
+                        <p>For teachers to review class attendance and related records.</p>
+                    </div>
+                </article>
             </div>
         </section>
 
-        <section class="home-process">
-            <div class="process-copy">
-                <span class="section-eyebrow">HOW IT WORKS</span>
-                <h2>Simple for students.<br>Useful for the school.</h2>
-                <p>
-                    SAMS is designed around a clear process that connects
-                    student records with daily attendance.
-                </p>
-            </div>
-
-            <div class="process-steps">
-                <div class="process-step">
-                    <span class="step-number">01</span>
-                    <div>
-                        <h3>Enter student ID</h3>
-                        <p>The student provides their assigned ID.</p>
-                    </div>
-                </div>
-
-                <div class="process-step">
-                    <span class="step-number">02</span>
-                    <div>
-                        <h3>Verify identity</h3>
-                        <p>SAMS looks up the ID in the student database.</p>
-                    </div>
-                </div>
-
-                <div class="process-step">
-                    <span class="step-number">03</span>
-                    <div>
-                        <h3>Record attendance</h3>
-                        <p>Valid check-ins are saved to the attendance records.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <aside class="help-note" aria-label="Help">
+            <span class="help-icon" aria-hidden="true">i</span>
+            <p><strong>Each workspace has its own sign-in.</strong> Students check in at the gate kiosk or sign in to review their own attendance history. Staff use their individual administrator or security accounts.</p>
+        </aside>
     </main>
 
     <footer class="home-footer">
-        <a href="{{ url_for('main.home') }}" class="footer-brand">
-            SAMS<span>.</span>
-        </a>
+        <a class="footer-brand" href="{{ url_for('main.home') }}">SAMS<span>.</span></a>
         <p>School Attendance Management System</p>
-        <a href="{{ url_for('gate.gate') }}">Student Gate →</a>
+        <a href="{{ url_for('gate.gate') }}">Student Gate <span aria-hidden="true">→</span></a>
     </footer>
-
 </body>
 </html>

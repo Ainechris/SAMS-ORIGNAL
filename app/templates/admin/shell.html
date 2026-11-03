@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>{% block document_title %}{{ page_title }}{% endblock %} | SAMS Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-pages.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="admin-page">
+<div class="admin-layout">
+    <aside class="sidebar" aria-label="Administrator navigation">
+        <a class="admin-brand" href="{{ url_for('admin.dashboard') }}">
+            <span class="brand-icon" aria-hidden="true">S</span>
+            <span><strong>SAMS</strong><small>Administration</small></span>
+        </a>
+        <p class="nav-heading">SCHOOL OPERATIONS</p>
+        <nav class="sidebar-nav">
+            <a class="nav-link {% if active_page == 'dashboard' %}active{% endif %}" href="{{ url_for('admin.dashboard') }}" {% if active_page == 'dashboard' %}aria-current="page"{% endif %}><span aria-hidden="true">▦</span>Dashboard</a>
+            <a class="nav-link {% if active_page == 'students' %}active{% endif %}" href="{{ url_for('admin_students.list_students') }}" {% if active_page == 'students' %}aria-current="page"{% endif %}><span aria-hidden="true">♙</span>Students</a>
+            <a class="nav-link {% if active_page == 'attendance' %}active{% endif %}" href="{{ url_for('admin_students.attendance_records') }}" {% if active_page == 'attendance' %}aria-current="page"{% endif %}><span aria-hidden="true">✓</span>Attendance</a>
+            <a class="nav-link {% if active_page == 'security' %}active{% endif %}" href="{{ url_for('admin_security.list_security_users') }}" {% if active_page == 'security' %}aria-current="page"{% endif %}><span aria-hidden="true">♧</span>Security staff</a>
+            <a class="nav-link {% if active_page == 'sessions' %}active{% endif %}" href="{{ url_for('admin_security.gate_sessions') }}" {% if active_page == 'sessions' %}aria-current="page"{% endif %}><span aria-hidden="true">◷</span>Gate sessions</a>
+            <a class="nav-link {% if active_page == 'reports' %}active{% endif %}" href="{{ url_for('admin_security.reports') }}" {% if active_page == 'reports' %}aria-current="page"{% endif %}><span aria-hidden="true">▤</span>Reports</a>
+        </nav>
+        <div class="sidebar-bottom">
+            <a class="side-utility" href="{{ url_for('main.home') }}"><span aria-hidden="true">⌂</span>Back to SAMS home</a>
+            <a class="side-utility" href="{{ url_for('gate.gate') }}"><span aria-hidden="true">↗</span>Open student kiosk</a>
+            <p>Signed in as {{ current_user.full_name }}</p>
+        </div>
+    </aside>
+    <main class="dashboard-main">
+        <header class="dashboard-header">
+            <div><p class="eyebrow">SCHOOL MANAGEMENT</p><h1>{% block page_heading %}{{ page_title }}{% endblock %}</h1><p class="subtitle">{% block page_subtitle %}{% endblock %}</p></div>
+            <form class="admin-signout" method="post" action="{{ url_for('admin.logout') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <span class="signed-in-name">{{ current_user.full_name }}</span>
+                <button type="submit">Sign out</button>
+            </form>
+        </header>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}<div class="admin-flash {{ category }}" role="status">{{ message }}</div>{% endfor %}
+        {% endwith %}
+        {% block admin_content %}{% endblock %}
+        <footer class="dashboard-footer">SAMS · School Attendance Management System</footer>
+    </main>
+</div>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

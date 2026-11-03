@@ -1,0 +1,18 @@
+{% extends "admin/shell.html" %}
+{% block document_title %}Security staff{% endblock %}
+{% block admin_content %}
+<section class="management-toolbar"><p class="toolbar-copy">Each gate operator signs in with an individual account. Temporary passwords must be changed at first sign-in.</p><a class="button-primary add-button" href="{{ url_for('admin_security.create_security_user') }}">Add security staff <span aria-hidden="true">+</span></a></section>
+<section class="content-card admin-table-card">
+    <div class="section-header"><div><p class="section-kicker">GATE OPERATORS</p><h2>{{ users|length }} security accounts</h2><p>Accounts controlling an active session cannot be disabled or reset until the session is handed over or closed.</p></div></div>
+    <div class="table-wrapper"><table class="management-table"><thead><tr><th scope="col">Staff ID</th><th scope="col">Name</th><th scope="col">Username</th><th scope="col">Status</th><th scope="col">Access</th><th scope="col">Actions</th></tr></thead><tbody>
+        {% for user in users %}<tr>
+            <td class="student-id">{{ user.staff_id }}</td><td class="student-name">{{ user.full_name }}</td><td>{{ user.username }}</td>
+            <td><span class="account-status {{ user.account_status }}">{{ user.account_status|title }}</span>{% if user.must_reset_password %}<small class="reset-required">Password change required</small>{% endif %}</td>
+            <td>{% if user.operating_gate %}<span class="operator-active">Current operator</span>{% else %}<span class="subtle-text">Not operating</span>{% endif %}</td>
+            <td><div class="row-actions"><a class="table-action" href="{{ url_for('admin_security.reset_security_password', user_id=user.id) }}">Reset password</a>
+                <form method="post" action="{{ url_for('admin_security.change_security_status', user_id=user.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="status" value="{% if user.account_status == 'active' %}disabled{% else %}active{% endif %}"><button class="table-action-button" type="submit">{% if user.account_status == 'active' %}Disable{% else %}Activate{% endif %}</button></form>
+            </div></td>
+        </tr>{% else %}<tr><td colspan="6"><div class="empty-state"><strong>No security accounts yet</strong><p>Add the first gate officer to allow authorised gate sessions.</p></div></td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+{% endblock %}

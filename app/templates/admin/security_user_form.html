@@ -1,0 +1,15 @@
+{% extends "admin/shell.html" %}
+{% block document_title %}Add security staff{% endblock %}
+{% block admin_content %}
+<a class="back-link" href="{{ url_for('admin_security.list_security_users') }}">← Security staff</a>
+<section class="content-card form-card"><div class="section-header"><div><p class="section-kicker">NEW OPERATOR ACCOUNT</p><h2>Add security staff</h2><p>Give the temporary password to this staff member through a private channel.</p></div></div>
+    <form class="record-form" method="post" action="">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-field"><label for="full_name">Staff member’s full name</label><input id="full_name" name="full_name" type="text" maxlength="120" autocomplete="name" value="{{ request.form.get('full_name', '') }}" required></div>
+        <div class="form-field"><label for="staff_id">Staff ID</label><input id="staff_id" name="staff_id" type="text" maxlength="40" value="{{ request.form.get('staff_id', '') }}" required></div>
+        <div class="form-field"><label for="username">Sign-in username</label><input id="username" name="username" type="text" maxlength="100" autocomplete="username" value="{{ request.form.get('username', '') }}" required></div>
+        <div class="form-field"><label for="temporary_password">Temporary password</label><input id="temporary_password" name="temporary_password" type="password" minlength="12" autocomplete="new-password" required><small>At least 12 characters. The staff member will be required to change it at first sign-in.</small></div>
+        <div class="form-actions"><button class="button-primary" type="submit">Create security account</button><a class="button-secondary" href="{{ url_for('admin_security.list_security_users') }}">Cancel</a></div>
+    </form>
+</section>
+{% endblock %}

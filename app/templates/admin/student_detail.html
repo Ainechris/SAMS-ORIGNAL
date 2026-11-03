@@ -1,0 +1,23 @@
+{% extends "admin/shell.html" %}
+{% block document_title %}{{ student.full_name }}{% endblock %}
+{% block admin_content %}
+<a class="back-link" href="{{ url_for('admin_students.list_students') }}">← Student directory</a>
+<section class="content-card profile-card">
+    <div class="profile-heading"><div><p class="section-kicker">STUDENT RECORD</p><h2>{{ student.full_name }}</h2><p>{{ student.student_id }} · {{ student.class_name }}</p></div><a class="button-secondary" href="{{ url_for('admin_students.edit_student', student_pk=student.id) }}">Edit record</a></div>
+    <dl class="profile-details"><div><dt>Student ID</dt><dd>{{ student.student_id }}</dd></div><div><dt>Class</dt><dd>{{ student.class_name }}</dd></div><div><dt>Registered</dt><dd>{{ student.created_at }}</dd></div></dl>
+</section>
+<section class="content-card portal-account-card">
+    <div><p class="section-kicker">STUDENT PORTAL</p><h2>Portal account</h2>
+        {% if student.portal_status == 'active' %}<p>This student activated their portal account on {{ student.activated_at }}.</p><span class="session-status-pill active"><i></i> Active</span>
+        {% else %}<p>The portal account is pending activation. Generate a one-time code to hand to the student privately.</p><span class="session-status-pill"><i></i> Pending activation</span>{% endif %}
+    </div>
+    {% if student.portal_status != 'active' %}<form method="post" action="{{ url_for('admin_students.issue_student_portal_code', student_pk=student.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="button-primary" type="submit">Generate one-time code</button></form>{% endif %}
+</section>
+<section class="content-card admin-table-card">
+    <div class="section-header"><div><p class="section-kicker">ATTENDANCE HISTORY</p><h2>Recent records</h2><p>Most recent 100 attendance records.</p></div></div>
+    <div class="table-wrapper"><table class="management-table"><thead><tr><th scope="col">Date</th><th scope="col">Check-in time</th><th scope="col">Status</th><th scope="col">Gate session</th><th scope="col">Station</th></tr></thead><tbody>
+        {% for item in attendance %}<tr><td>{{ item.attendance_date }}</td><td>{{ item.check_in_time }}</td><td>{{ item.status }}</td><td>{{ item.session_reference or 'Historical record' }}</td><td>{{ item.station_name or '—' }}</td></tr>
+        {% else %}<tr><td colspan="5"><div class="empty-state"><strong>No attendance records</strong><p>Check-ins for this student will appear here.</p></div></td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+{% endblock %}

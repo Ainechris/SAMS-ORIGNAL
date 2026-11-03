@@ -1,0 +1,29 @@
+{% extends "admin/shell.html" %}
+{% block document_title %}Reports and analytics{% endblock %}
+{% block admin_content %}
+<section class="content-card filters-card"><form class="filter-form report-filters" method="get" action="{{ url_for('admin_security.reports') }}">
+    <div><label for="period">Reporting period</label><select id="period" name="period"><option value="day" {% if period == 'day' %}selected{% endif %}>Single day</option><option value="week" {% if period == 'week' %}selected{% endif %}>7-day period ending on date</option><option value="month" {% if period == 'month' %}selected{% endif %}>Calendar month containing date</option></select></div>
+    <div><label for="report-date">Date</label><input id="report-date" name="date" type="date" value="{{ anchor }}"></div>
+    <button class="button-primary" type="submit">Generate report</button>
+</form></section>
+
+<section class="report-summary" aria-label="Report summary">
+    <article class="content-card report-stat"><span>Registered students</span><strong>{{ total_students }}</strong><small>Current student register</small></article>
+    <article class="content-card report-stat"><span>Check-ins recorded</span><strong>{{ total_checkins }}</strong><small>{{ start_date }}{% if start_date != end_date %} to {{ end_date }}{% endif %}</small></article>
+    {% if period == 'day' %}<article class="content-card report-stat"><span>Attendance rate</span><strong>{% if daily_rate is not none %}{{ daily_rate }}%{% else %}—{% endif %}</strong><small>{% if daily_rate is not none %}Present check-ins ÷ registered students{% else %}No registered students{% endif %}</small></article>{% else %}<article class="content-card report-stat"><span>Days with records</span><strong>{{ recorded_days }}</strong><small>Dates containing check-ins</small></article>{% endif %}
+</section>
+
+<section class="content-card admin-table-card">
+    <div class="section-header"><div><p class="section-kicker">DAILY ACTIVITY</p><h2>Check-ins by date</h2><p>Counts are calculated from saved attendance records.</p></div></div>
+    <div class="table-wrapper"><table class="management-table"><thead><tr><th scope="col">Attendance date</th><th scope="col">Present check-ins</th><th scope="col">All records</th></tr></thead><tbody>
+        {% for row in daily_rows %}<tr><td>{{ row.attendance_date }}</td><td>{{ row.present_count }}</td><td>{{ row.checkin_count }}</td></tr>{% else %}<tr><td colspan="3"><div class="empty-state"><strong>No attendance for this period</strong><p>Daily counts will appear after check-ins are recorded.</p></div></td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+
+<section class="content-card admin-table-card">
+    <div class="section-header"><div><p class="section-kicker">CLASS COMPARISON</p><h2>Check-ins by class</h2><p>Includes current registered classes; no attendance values are estimated.</p></div></div>
+    <div class="table-wrapper"><table class="management-table"><thead><tr><th scope="col">Class</th><th scope="col">Present check-ins</th><th scope="col">All attendance records</th></tr></thead><tbody>
+        {% for row in class_rows %}<tr><td class="student-name">{{ row.class_name }}</td><td>{{ row.present_checkins }}</td><td>{{ row.all_checkins }}</td></tr>{% else %}<tr><td colspan="3"><div class="empty-state"><strong>No classes registered</strong><p>Class comparisons will appear when student records exist.</p></div></td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+{% endblock %}

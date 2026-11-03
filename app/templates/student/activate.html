@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Activate student portal | SAMS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body class="auth-page role-student">
+<main class="auth-shell">
+    <a class="auth-brand" href="{{ url_for('main.home') }}"><span class="auth-logo" aria-hidden="true">S</span><span><strong>SAMS</strong><small>Student portal</small></span></a>
+    <section class="auth-card" aria-labelledby="activate-title">
+        <p class="auth-eyebrow">STUDENT PORTAL</p><h1 id="activate-title">Activate your account</h1>
+        <p class="auth-intro">Enter your student ID and the one-time code given to you by a school administrator.</p>
+        {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="auth-alert {{ category }}" role="alert">{{ message }}</div>{% endfor %}{% endwith %}
+        <form method="post" action="">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="student_id">Student ID</label><input id="student_id" name="student_id" type="text" maxlength="50" autocomplete="username" required autofocus>
+            <label for="activation_code">One-time activation code</label><input id="activation_code" name="activation_code" type="text" maxlength="40" autocomplete="one-time-code" required>
+            <label for="password">Create password</label><input id="password" name="password" type="password" minlength="12" autocomplete="new-password" required>
+            <label for="confirm_password">Confirm password</label><input id="confirm_password" name="confirm_password" type="password" minlength="12" autocomplete="new-password" required>
+            <p class="password-hint">Use at least 12 characters. The code expires after 14 days and can only be used once.</p>
+            <button class="auth-submit" type="submit">Activate account</button>
+        </form>
+    </section>
+    <a class="auth-back" href="{{ url_for('student.login') }}">← Back to student sign in</a>
+</main>
+</body>
+</html>

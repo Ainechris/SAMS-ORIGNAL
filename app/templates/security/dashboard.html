@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Security workspace | SAMS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body class="security-workspace">
+    <header class="security-header">
+        <a class="auth-brand" href="{{ url_for('security.dashboard') }}">
+            <span class="auth-logo" aria-hidden="true">S</span>
+            <span><strong>SAMS</strong><small>Gate operations</small></span>
+        </a>
+        <div class="operator-chip"><span class="operator-dot"></span>{{ current_user.full_name }}</div>
+        <form method="post" action="{{ url_for('security.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="signout-button" type="submit">Sign out</button>
+        </form>
+    </header>
+
+    <main class="security-main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="auth-alert {{ category }}" role="status">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <div class="security-title-row">
+            <div><p class="auth-eyebrow">SECURITY WORKSPACE</p><h1>Gate operations</h1><p class="security-intro">Manage the active gate session and monitor student check-ins.</p></div>
+            <a class="history-link" href="{{ url_for('security.session_history') }}">Session history <span aria-hidden="true">→</span></a>
+        </div>
+
+        <section class="security-stats" aria-label="Today's gate statistics">
+            <article class="security-stat"><span>Students checked in today</span><strong>{{ checkins_today }}</strong><small>Recorded attendance</small></article>
+            <article class="security-stat"><span>Total registered students</span><strong>{{ total_students }}</strong><small>Current student records</small></article>
+            <article class="security-stat"><span>Gate station</span><strong class="station-status {% if station_active %}station-ready{% else %}station-disabled{% endif %}">{% if station_active %}Ready{% else %}Disabled{% endif %}</strong><small>Main Gate · Kiosk 1</small></article>
+        </section>
+
+        <section class="session-panel" aria-labelledby="session-title">
+            <div class="panel-heading"><div><p class="auth-eyebrow">CURRENT GATE SESSION</p><h2 id="session-title">{% if active_session %}{{ active_session.session_reference }}{% else %}No active session{% endif %}</h2></div>
+                {% if active_session %}<span class="session-state active-state"><i></i> Active</span>{% else %}<span class="session-state idle-state"><i></i> Not started</span>{% endif %}
+            </div>
+
+            {% if active_session %}
+                <div class="session-details">
+                    <div><span>Current operator</span><strong>{{ active_session.current_operator_name }}</strong><small>{{ active_session.current_operator_staff_id }}</small></div>
+                    <div><span>Gate station</span><strong>{{ active_session.gate_name }}</strong><small>{{ active_session.station_name }} · {{ active_session.station_code }}</small></div>
+                    <div><span>Started at</span><strong>{{ session_started_local }} local time</strong><small>{{ session_duration }} elapsed</small></div>
+                    <div><span>Session check-ins</span><strong>{{ session_checkins }}</strong><small>Attendance linked to this session</small></div>
+                </div>
+                {% if is_current_operator %}
+                    <div class="session-actions">
+                        <a class="secondary-session-action" href="{{ url_for('security.session_handover') }}">Hand over session</a>
+                        <a class="close-session-action" href="{{ url_for('security.session_close') }}">Close gate session</a>
+                    </div>
+                {% else %}
+                    <p class="session-notice">This session is controlled by {{ active_session.current_operator_name }}. You can review the status, but only the current operator can hand over or close it.</p>
+                {% endif %}
+            {% elif station_active %}
+                <p class="session-description">Start your shift to enable student check-ins at the kiosk. Only one operator can control the gate at a time.</p>
+                <form method="post" action="{{ url_for('security.session_start') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="start-session-button" type="submit">Start gate session <span aria-hidden="true">→</span></button>
+                </form>
+            {% else %}
+                <p class="session-notice">The Main Gate kiosk is disabled. Contact an administrator before starting a session.</p>
+            {% endif %}
+        </section>
+
+        <section class="security-activity" aria-labelledby="security-activity-title">
+            <div class="activity-title"><div><p class="auth-eyebrow">LATEST ACTIVITY</p><h2 id="security-activity-title">Recent student check-ins</h2></div><span>{{ recent_attendance|length }} shown</span></div>
+            <div class="security-table-wrap">
+                <table class="security-table">
+                    <thead><tr><th scope="col">Student ID</th><th scope="col">Student name</th><th scope="col">Class</th><th scope="col">Time</th><th scope="col">Session</th><th scope="col">Status</th></tr></thead>
+                    <tbody>
+                    {% for record in recent_attendance %}
+                        <tr><td>{{ record.student_id }}</td><td>{{ record.full_name }}</td><td>{{ record.class_name }}</td><td>{{ record.check_in_time }}</td><td>{{ record.session_reference or 'Historical' }}</td><td><span class="checkin-status">{{ record.status }}</span></td></tr>
+                    {% else %}
+                        <tr><td colspan="6"><div class="security-empty"><strong>No check-ins yet today</strong><p>Student check-ins will appear here after the gate session starts.</p></div></td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

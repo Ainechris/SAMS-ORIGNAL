@@ -1,0 +1,24 @@
+{% extends "admin/shell.html" %}
+{% block document_title %}Students{% endblock %}
+{% block admin_content %}
+<section class="management-toolbar">
+    <form class="filter-form" method="get" action="{{ url_for('admin_students.list_students') }}">
+        <label for="student-search">Search students</label>
+        <input id="student-search" name="q" type="search" value="{{ query }}" placeholder="Name or student ID">
+        <label for="class-filter">Class</label>
+        <select id="class-filter" name="class"><option value="">All classes</option>{% for item in classes %}<option value="{{ item.class_name }}" {% if selected_class == item.class_name %}selected{% endif %}>{{ item.class_name }}</option>{% endfor %}</select>
+        <button class="button-primary" type="submit">Search</button>
+        {% if query or selected_class %}<a class="button-secondary" href="{{ url_for('admin_students.list_students') }}">Clear</a>{% endif %}
+    </form>
+    <a class="button-primary add-button" href="{{ url_for('admin_students.create_student') }}">Register student <span aria-hidden="true">+</span></a>
+</section>
+
+<section class="content-card admin-table-card">
+    <div class="section-header"><div><p class="section-kicker">STUDENT DIRECTORY</p><h2>{{ total }} registered students</h2><p>Showing page {{ page }} of {{ total_pages }}.</p></div></div>
+    <div class="table-wrapper"><table class="management-table"><thead><tr><th scope="col">Student ID</th><th scope="col">Student name</th><th scope="col">Class</th><th scope="col">Registered</th><th scope="col">Actions</th></tr></thead><tbody>
+        {% for student in students %}<tr><td><a class="student-id" href="{{ url_for('admin_students.student_detail', student_pk=student.id) }}">{{ student.student_id }}</a></td><td class="student-name">{{ student.full_name }}</td><td>{{ student.class_name }}</td><td>{{ student.created_at }}</td><td><a class="table-action" href="{{ url_for('admin_students.edit_student', student_pk=student.id) }}">Edit</a></td></tr>
+        {% else %}<tr><td colspan="5"><div class="empty-state"><strong>{% if query or selected_class %}No matching students{% else %}No students registered{% endif %}</strong><p>{% if query or selected_class %}Adjust the search or class filter.{% else %}Register a student to add them to the school directory.{% endif %}</p></div></td></tr>{% endfor %}
+    </tbody></table></div>
+    {% if total_pages > 1 %}<nav class="pagination" aria-label="Student list pages">{% if previous_url %}<a href="{{ previous_url }}">← Previous</a>{% endif %}<span>Page {{ page }} of {{ total_pages }}</span>{% if next_url %}<a href="{{ next_url }}">Next →</a>{% endif %}</nav>{% endif %}
+</section>
+{% endblock %}

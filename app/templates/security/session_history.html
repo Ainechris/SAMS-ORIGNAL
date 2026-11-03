@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gate session history | SAMS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body class="security-workspace">
+    <header class="security-header">
+        <a class="auth-brand" href="{{ url_for('security.dashboard') }}"><span class="auth-logo" aria-hidden="true">S</span><span><strong>SAMS</strong><small>Gate operations</small></span></a>
+        <div class="operator-chip"><span class="operator-dot"></span>{{ current_user.full_name }}</div>
+        <form method="post" action="{{ url_for('security.logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="signout-button" type="submit">Sign out</button></form>
+    </header>
+    <main class="security-main">
+        <a class="history-back" href="{{ url_for('security.dashboard') }}">← Gate operations</a>
+        <p class="auth-eyebrow">RECORDS</p><h1>Gate session history</h1>
+        <p class="security-intro">Recent sessions and verified operator handovers. The latest 100 records are shown.</p>
+
+        <section class="security-activity history-section" aria-labelledby="sessions-title">
+            <div class="activity-title"><div><p class="auth-eyebrow">SESSIONS</p><h2 id="sessions-title">Gate sessions</h2></div><span>{{ sessions|length }} records</span></div>
+            <div class="security-table-wrap"><table class="security-table">
+                <thead><tr><th scope="col">Reference</th><th scope="col">Status</th><th scope="col">Started by</th><th scope="col">Station</th><th scope="col">Started</th><th scope="col">Closed by</th><th scope="col">Check-ins</th></tr></thead>
+                <tbody>{% for item in sessions %}<tr><td>{{ item.session_reference }}</td><td><span class="history-status {{ item.status }}">{{ item.status|title }}</span></td><td>{{ item.started_by_name }}</td><td>{{ item.station_name }}</td><td>{{ item.started_at }}</td><td>{{ item.closed_by_name or '—' }}</td><td>{{ item.checkin_count }}</td></tr>{% else %}<tr><td colspan="7"><div class="security-empty"><strong>No sessions recorded</strong><p>Sessions will appear here after an officer starts the gate.</p></div></td></tr>{% endfor %}</tbody>
+            </table></div>
+        </section>
+
+        <section class="security-activity history-section" aria-labelledby="handovers-title">
+            <div class="activity-title"><div><p class="auth-eyebrow">SHIFT CHANGES</p><h2 id="handovers-title">Verified handovers</h2></div><span>{{ handovers|length }} records</span></div>
+            <div class="security-table-wrap"><table class="security-table">
+                <thead><tr><th scope="col">Session</th><th scope="col">Outgoing officer</th><th scope="col">Incoming officer</th><th scope="col">Accepted at</th><th scope="col">Status</th></tr></thead>
+                <tbody>{% for item in handovers %}<tr><td>{{ item.session_reference }}</td><td>{{ item.outgoing_name }}</td><td>{{ item.incoming_name }}</td><td>{{ item.handover_at }}</td><td>{{ item.status|title }}</td></tr>{% else %}<tr><td colspan="5"><div class="security-empty"><strong>No handovers recorded</strong><p>Accepted shift changes will appear here.</p></div></td></tr>{% endfor %}</tbody>
+            </table></div>
+        </section>
+    </main>
+</body>
+</html>

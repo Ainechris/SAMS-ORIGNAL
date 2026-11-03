@@ -1,188 +1,60 @@
+{% extends "admin/shell.html" %}
+{% block document_title %}Dashboard{% endblock %}
+{% block page_heading %}Admin Dashboard{% endblock %}
+{% block page_subtitle %}Monitor attendance and gate operations for {{ today_label }}.{% endblock %}
+{% block admin_content %}
+<section class="welcome-banner">
+    <div><p class="welcome-label">DAILY OPERATIONS</p><h2>Attendance at a glance.</h2><p>Review real check-ins, gate activity, and the students who have not checked in yet.</p></div>
+    <div class="welcome-symbol" aria-hidden="true">✓</div>
+</section>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | SAMS</title>
+<section class="stats-grid" aria-label="Today's attendance statistics">
+    <article class="stat-card"><div class="stat-top"><span>Total students</span><span class="stat-icon blue" aria-hidden="true">♙</span></div><p class="stat-number">{{ total_students }}</p><p class="stat-note">Registered student records</p></article>
+    <article class="stat-card"><div class="stat-top"><span>Checked in today</span><span class="stat-icon green" aria-hidden="true">✓</span></div><p class="stat-number">{{ present_today }}</p><p class="stat-note">Successful arrivals recorded</p></article>
+    <article class="stat-card"><div class="stat-top"><span>Not checked in</span><span class="stat-icon orange" aria-hidden="true">◷</span></div><p class="stat-number">{{ not_checked_in }}</p><p class="stat-note">Not confirmed as absent</p></article>
+    <article class="stat-card"><div class="stat-top"><span>Attendance rate</span><span class="stat-icon purple" aria-hidden="true">%</span></div><p class="stat-number">{% if attendance_rate is not none %}{{ attendance_rate }}<span class="percent">%</span>{% else %}—{% endif %}</p><p class="stat-note">Checked in ÷ registered students</p></article>
+</section>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/base.css') }}">
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/admin.css') }}">
-</head>
-<body class="admin-page">
+{% if operational_alerts %}
+<section class="admin-alerts" aria-label="Operational alerts">
+    {% for alert in operational_alerts %}<div class="admin-alert"><span aria-hidden="true">!</span><p>{{ alert }}</p></div>{% endfor %}
+</section>
+{% endif %}
 
-<div class="admin-layout">
-    <aside class="sidebar">
-        <a class="admin-brand" href="{{ url_for('admin.dashboard') }}">
-            <span class="brand-icon">S</span>
-            <span><strong>SAMS</strong><small>Administration</small></span>
-        </a>
-
-        <p class="nav-heading">WORKSPACE</p>
-
-        <nav class="sidebar-nav">
-            <a class="nav-link active" href="{{ url_for('admin.dashboard') }}">
-                <span>▦</span> Overview
-            </a>
-            <a class="nav-link" href="#students">
-                <span>♙</span> Students
-            </a>
-            <a class="nav-link" href="#attendance">
-                <span>✓</span> Attendance
-            </a>
-            <a class="nav-link" href="#teachers">
-                <span>♧</span> Teachers
-            </a>
-            <a class="nav-link" href="#reports">
-                <span>▤</span> Reports
-            </a>
-        </nav>
-
-        <div class="sidebar-bottom">
-            <p>School Attendance Management System</p>
-            <a href="{{ url_for('main.home') }}">← Back to home</a>
-            <a href="{{ url_for('gate.gate') }}">Open student gate</a>
-        </div>
-    </aside>
-
-    <main class="dashboard-main">
-        <header class="dashboard-header">
-            <div>
-                <p class="eyebrow">SCHOOL MANAGEMENT</p>
-                <h1>Admin Dashboard</h1>
-                <p class="subtitle">Your school's attendance at a glance.</p>
+<section class="admin-overview-grid" aria-label="Gate operations">
+    <article class="content-card gate-overview-card">
+        <div class="section-header"><div><p class="section-kicker">LIVE OPERATIONS</p><h2>Current gate session</h2></div><a class="section-action" href="{{ url_for('admin_security.gate_sessions') }}">Session records →</a></div>
+        {% if current_gate_session %}
+            <div class="current-session-summary">
+                <span class="session-status-pill active"><i></i> Active</span>
+                <strong>{{ current_gate_session.session_reference }}</strong>
+                <span>{{ current_gate_session.gate_name }} · {{ current_gate_session.station_name }}</span>
             </div>
-            <div class="admin-badge">
-                <span class="status-dot"></span>
-                Dashboard
-            </div>
-        </header>
+            <div class="session-meta"><div><small>Current operator</small><strong>{{ current_gate_session.current_operator_name }}</strong><span>{{ current_gate_session.current_operator_staff_id }}</span></div><div><small>Started</small><strong>{{ current_gate_session.started_at }}</strong></div></div>
+        {% else %}
+            <div class="session-empty"><span class="session-status-pill idle"><i></i> No active session</span><p>The kiosk is closed until an authorised security officer starts a gate session.</p><a href="{{ url_for('admin_security.gate_sessions') }}">Review gate sessions</a></div>
+        {% endif %}
+    </article>
+    <article class="content-card attendance-rate-card">
+        <div class="section-header"><div><p class="section-kicker">TODAY</p><h2>Attendance overview</h2></div></div>
+        <div class="admin-rate-line"><div class="admin-progress {{ rate_tone }}" style="--rate: {{ attendance_rate or 0 }}%" role="img" aria-label="{% if attendance_rate is not none %}{{ attendance_rate }} percent attendance rate{% else %}No registered students{% endif %}"><span>{% if attendance_rate is not none %}{{ attendance_rate }}%{% else %}—{% endif %}</span></div><div><strong>{{ rate_label }}</strong><p>{{ present_today }} checked in<br>{{ not_checked_in }} not checked in</p></div></div>
+        <p class="rate-explainer">90–100% Excellent · 75–89.9% Moderate · Below 75% Needs attention</p>
+    </article>
+</section>
 
-        <section class="welcome-banner">
-            <div>
-                <p class="welcome-label">ADMINISTRATION OVERVIEW</p>
-                <h2>Welcome to SAMS</h2>
-                <p>Monitor student attendance and check-in activity.</p>
-            </div>
-            <div class="welcome-symbol" aria-hidden="true">✓</div>
-        </section>
+<section class="content-card admin-table-card" id="attendance">
+    <div class="section-header"><div><p class="section-kicker">LATEST ACTIVITY</p><h2>Recent attendance</h2><p>Latest student check-ins recorded today.</p></div><a class="section-action" href="{{ url_for('admin_students.attendance_records') }}">View attendance →</a></div>
+    <div class="table-wrapper"><table><thead><tr><th scope="col">Student ID</th><th scope="col">Student name</th><th scope="col">Class</th><th scope="col">Time</th><th scope="col">Status</th></tr></thead><tbody>
+        {% for record in recent_attendance %}<tr><td class="student-id">{{ record.student_id }}</td><td class="student-name">{{ record.full_name }}</td><td>{{ record.class_name }}</td><td>{{ record.check_in_time }}</td><td><span class="status-pill {% if record.status == 'Present' %}present{% else %}other-status{% endif %}"><span></span>{{ record.status }}</span></td></tr>
+        {% else %}<tr><td colspan="5"><div class="empty-state"><strong>No check-ins yet today</strong><p>Attendance records will appear here during an active gate session.</p></div></td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
 
-        <section class="stats-grid" aria-label="Today's statistics">
-            <article class="stat-card">
-                <div class="stat-top">
-                    <span>Total students</span>
-                    <span class="stat-icon blue">♙</span>
-                </div>
-                <p class="stat-number">{{ total_students }}</p>
-                <p class="stat-note">Registered student records</p>
-            </article>
-
-            <article class="stat-card">
-                <div class="stat-top">
-                    <span>Present today</span>
-                    <span class="stat-icon green">✓</span>
-                </div>
-                <p class="stat-number">{{ present_today }}</p>
-                <p class="stat-note">Recorded as present today</p>
-            </article>
-
-            <article class="stat-card">
-                <div class="stat-top">
-                    <span>Not checked in</span>
-                    <span class="stat-icon orange">◷</span>
-                </div>
-                <p class="stat-number">{{ absent_today }}</p>
-                <p class="stat-note">No present check-in recorded</p>
-            </article>
-
-            <article class="stat-card">
-                <div class="stat-top">
-                    <span>Attendance rate</span>
-                    <span class="stat-icon purple">%</span>
-                </div>
-                <p class="stat-number">{{ attendance_rate }}%</p>
-                <p class="stat-note">Present today ÷ total students</p>
-            </article>
-        </section>
-
-        <section class="content-card" id="attendance">
-            <div class="section-header">
-                <div>
-                    <h2>Today's check-ins</h2>
-                    <p>Latest attendance records for today.</p>
-                </div>
-                <span class="record-count">
-                    {{ recent_attendance|length }} records shown
-                </span>
-            </div>
-
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Student</th>
-                            <th>Student ID</th>
-                            <th>Class</th>
-                            <th>Check-in time</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for record in recent_attendance %}
-                        <tr>
-                            <td class="student-name">{{ record.full_name }}</td>
-                            <td>{{ record.student_id }}</td>
-                            <td>{{ record.class_name }}</td>
-                            <td>{{ record.check_in_time }}</td>
-                            <td>
-                                <span class="status-pill
-                                    {% if record.status == 'Present' %}
-                                        present
-                                    {% else %}
-                                        other-status
-                                    {% endif %}">
-                                    {{ record.status }}
-                                </span>
-                            </td>
-                        </tr>
-                        {% else %}
-                        <tr>
-                            <td colspan="5" class="empty-state">
-                                <span class="empty-icon">◷</span>
-                                <strong>No check-ins yet today</strong>
-                                <p>Student attendance records will appear here.</p>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section class="quick-actions" id="students">
-            <div>
-                <h2>Quick access</h2>
-                <p>Jump to an existing part of your system.</p>
-            </div>
-            <a class="action-card" href="{{ url_for('gate.gate') }}">
-                <span class="action-icon">✓</span>
-                <span><strong>Student gate</strong><small>Open check-in page</small></span>
-                <span class="action-arrow">→</span>
-            </a>
-            <a class="action-card" href="{{ url_for('main.home') }}">
-                <span class="action-icon">⌂</span>
-                <span><strong>Main home</strong><small>Return to SAMS home</small></span>
-                <span class="action-arrow">→</span>
-            </a>
-        </section>
-
-        <footer class="dashboard-footer">
-            SAMS · School Attendance Management System
-        </footer>
-    </main>
-</div>
-
-</body>
-</html>
+<section class="content-card admin-table-card">
+    <div class="section-header"><div><p class="section-kicker">SESSION MONITORING</p><h2>Recent gate sessions</h2><p>Session starts, closures, and responsible operators.</p></div><a class="section-action" href="{{ url_for('admin_security.gate_sessions') }}">View all sessions →</a></div>
+    <div class="table-wrapper"><table><thead><tr><th scope="col">Session</th><th scope="col">Status</th><th scope="col">Gate station</th><th scope="col">Operator</th><th scope="col">Started</th></tr></thead><tbody>
+        {% for item in recent_gate_sessions %}<tr><td class="student-id">{{ item.session_reference }}</td><td><span class="session-status-pill {{ item.status }}"><i></i>{{ item.status|title }}</span></td><td>{{ item.gate_name }} · {{ item.station_name }}</td><td>{{ item.current_operator_name }}{% if item.current_operator_status != 'active' %} <strong class="disabled-flag">Disabled</strong>{% endif %}</td><td>{{ item.started_at }}</td></tr>
+        {% else %}<tr><td colspan="5"><div class="empty-state"><strong>No gate sessions recorded</strong><p>Session history will appear after the first authorised shift starts.</p></div></td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+{% endblock %}

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hand over gate session | SAMS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body class="auth-page role-security">
+    <main class="auth-shell workflow-shell">
+        <a class="auth-brand" href="{{ url_for('security.dashboard') }}"><span class="auth-logo" aria-hidden="true">S</span><span><strong>SAMS</strong><small>Gate operations</small></span></a>
+        <section class="auth-card workflow-card" aria-labelledby="handover-title">
+            <p class="auth-eyebrow">SHIFT CHANGE · {{ active_session.session_reference }}</p>
+            <h1 id="handover-title">Hand over the gate session</h1>
+            <p class="auth-intro">The incoming officer must sign in with their own active security account. The session stays open and keeps the same reference.</p>
+            {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="auth-alert {{ category }}" role="alert">{{ message }}</div>{% endfor %}{% endwith %}
+            <form method="post" action="">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label for="incoming_staff">Incoming staff username or ID</label>
+                <input id="incoming_staff" name="incoming_staff" type="text" maxlength="100" autocomplete="username" required autofocus>
+                <label for="incoming_password">Incoming officer’s password</label>
+                <input id="incoming_password" name="incoming_password" type="password" autocomplete="current-password" required>
+                <label class="accept-label"><input name="accept_handover" type="checkbox" value="yes" required><span>I accept responsibility for this gate session.</span></label>
+                <button class="auth-submit" type="submit">Verify and complete handover <span aria-hidden="true">→</span></button>
+            </form>
+        </section>
+        <a class="auth-back" href="{{ url_for('security.dashboard') }}">← Return to gate operations</a>
+    </main>
+</body>
+</html>

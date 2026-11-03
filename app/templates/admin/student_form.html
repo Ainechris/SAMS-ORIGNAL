@@ -1,0 +1,15 @@
+{% extends "admin/shell.html" %}
+{% block document_title %}{{ page_title }}{% endblock %}
+{% block admin_content %}
+<a class="back-link" href="{{ url_for('admin_students.list_students') }}">← Student directory</a>
+<section class="content-card form-card">
+    <div class="section-header"><div><p class="section-kicker">STUDENT RECORD</p><h2>{{ page_title }}</h2><p>{{ page_subtitle }}</p></div></div>
+    <form class="record-form" method="post" action="">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-field"><label for="student_id">Student ID</label><input id="student_id" name="student_id" type="text" maxlength="50" value="{{ request.form.get('student_id', student.student_id if student else '') }}" placeholder="e.g. SAMS001" required><small>Use the student’s assigned school ID.</small></div>
+        <div class="form-field"><label for="full_name">Full name</label><input id="full_name" name="full_name" type="text" maxlength="120" value="{{ request.form.get('full_name', student.full_name if student else '') }}" autocomplete="name" required></div>
+        <div class="form-field"><label for="class_name">Class</label><input id="class_name" name="class_name" type="text" maxlength="80" value="{{ request.form.get('class_name', student.class_name if student else '') }}" required></div>
+        <div class="form-actions"><button class="button-primary" type="submit">{% if student %}Save changes{% else %}Register student{% endif %}</button><a class="button-secondary" href="{{ url_for('admin_students.list_students') }}">Cancel</a></div>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "admin/shell.html" %}
+{% block document_title %}Gate sessions{% endblock %}
+{% block admin_content %}
+<section class="content-card admin-table-card">
+    <div class="section-header"><div><p class="section-kicker">GATE MONITORING</p><h2>Session history</h2><p>Latest 200 sessions. An active session can be recovered by an administrator with a recorded reason.</p></div></div>
+    <div class="table-wrapper"><table class="management-table"><thead><tr><th scope="col">Reference</th><th scope="col">Status</th><th scope="col">Station</th><th scope="col">Started by</th><th scope="col">Current operator</th><th scope="col">Start / end</th><th scope="col">Check-ins</th><th scope="col">Recovery</th></tr></thead><tbody>
+        {% for item in sessions %}<tr>
+            <td class="student-id">{{ item.session_reference }}</td><td><span class="session-status-pill {{ item.status }}"><i></i>{{ item.status|title }}</span></td>
+            <td>{{ item.gate_name }} · {{ item.station_name }}</td><td>{{ item.started_by_name }}</td>
+            <td>{{ item.operator_name }}{% if item.operator_status != 'active' %}<small class="reset-required">Account disabled</small>{% endif %}</td>
+            <td>{{ item.started_at }}{% if item.ended_at %}<small class="table-subtext">Ended {{ item.ended_at }}</small>{% endif %}</td><td>{{ item.checkin_count }}</td>
+            <td>{% if item.status == 'active' %}<details class="recovery-details"><summary>Force close</summary><form method="post" action="{{ url_for('admin_security.force_close_session', session_id=item.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label for="reason-{{ item.id }}">Reason (15–500 characters)</label><textarea id="reason-{{ item.id }}" name="reason" minlength="15" maxlength="500" required></textarea><button class="danger-button" type="submit">Close and record</button></form></details>{% elif item.admin_closer %}<span class="table-subtext">By {{ item.admin_closer }}{% if item.recovery_reason %}<br>{{ item.recovery_reason }}{% endif %}</span>{% elif item.security_closer %}<span>{{ item.security_closer }}</span>{% else %}<span class="subtle-text">—</span>{% endif %}</td>
+        </tr>{% else %}<tr><td colspan="8"><div class="empty-state"><strong>No gate sessions recorded</strong><p>Sessions appear here once an authorised security officer starts a shift.</p></div></td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+
+<section class="content-card admin-table-card">
+    <div class="section-header"><div><p class="section-kicker">SHIFT CHANGES</p><h2>Verified handovers</h2><p>Incoming officers accepted using their own account credentials.</p></div></div>
+    <div class="table-wrapper"><table class="management-table"><thead><tr><th scope="col">Session</th><th scope="col">Outgoing operator</th><th scope="col">Incoming operator</th><th scope="col">Time</th><th scope="col">Status</th></tr></thead><tbody>
+        {% for item in handovers %}<tr><td class="student-id">{{ item.session_reference }}</td><td>{{ item.outgoing_name }}</td><td>{{ item.incoming_name }}</td><td>{{ item.handover_at }}</td><td>{{ item.status|title }}</td></tr>
+        {% else %}<tr><td colspan="5"><div class="empty-state"><strong>No handovers recorded</strong><p>Accepted shift changes will appear here.</p></div></td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+{% endblock %}

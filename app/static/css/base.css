@@ -1,39 +1,51 @@
-﻿:root {
-    --sams-navy: #142b4a;
-    --sams-blue: #2563eb;
-    --sams-teal: #0d9488;
-    --sams-background: #f3f7fc;
+:root {
+    --sams-brand-navy: #17243b;
+    --sams-brand-blue: #4169e1;
+    --sams-brand-green: #14805f;
+    --sams-navy: var(--sams-brand-navy);
+    --sams-blue: var(--sams-brand-blue);
+    --sams-teal: var(--sams-brand-green);
+    --sams-background: #f5f7fb;
     --sams-surface: #ffffff;
-    --sams-text: #172b45;
-    --sams-muted: #64748b;
-    --sams-border: #e2e8f0;
-    --sams-success: #166534;
-    --sams-success-bg: #dcfce7;
-    --sams-error: #991b1b;
-    --sams-error-bg: #fee2e2;
-    --sams-radius: 12px;
-    --sams-shadow: 0 8px 28px rgb(20 43 74 / 8%);
+    --sams-text: #17243b;
+    --sams-muted: #76839a;
+    --sams-subtle: #9aa5b5;
+    --sams-border: #e5eaf1;
+    --sams-success: #14805f;
+    --sams-success-bg: #e7f6ef;
+    --sams-error: #9e3833;
+    --sams-error-bg: #fff3f2;
+    --sams-warning: #9b6b22;
+    --sams-warning-bg: #fff8e9;
+    --sams-info: #50658a;
+    --sams-info-bg: #f0f4fb;
+    --sams-radius-sm: 7px;
+    --sams-radius-md: 10px;
+    --sams-radius-lg: 13px;
+    --sams-radius: var(--sams-radius-md);
+    --sams-shadow: 0 8px 24px rgb(23 36 59 / 5%);
+    --sams-focus: 0 0 0 3px rgb(65 105 225 / 24%);
+    --sams-space-1: 4px;
+    --sams-space-2: 8px;
+    --sams-space-3: 12px;
+    --sams-space-4: 16px;
+    --sams-space-5: 20px;
+    --sams-space-6: 24px;
+    --sams-font-body: "Segoe UI", Arial, sans-serif;
 }
 
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
     min-height: 100vh;
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: var(--sams-font-body);
     background: var(--sams-background);
     color: var(--sams-text);
 }
 
-button, input, select, textarea {
-    font: inherit;
-}
-
-a {
-    color: var(--sams-blue);
-}
+button, input, select, textarea { font: inherit; }
+a { color: var(--sams-blue); }
 
 .sams-button {
     display: inline-flex;
@@ -47,25 +59,17 @@ a {
     font-weight: 700;
     text-decoration: none;
 }
-
-.sams-button:hover {
-    background: #1d4ed8;
-}
+.sams-button:hover { background: #3156ce; }
 
 .sams-card {
     padding: 24px;
     border: 1px solid var(--sams-border);
-    border-radius: 18px;
+    border-radius: var(--sams-radius-lg);
     background: var(--sams-surface);
     box-shadow: var(--sams-shadow);
 }
-
-.sams-muted {
-    color: var(--sams-muted);
-}
+.sams-muted { color: var(--sams-muted); }
 
 @media (max-width: 600px) {
-    .sams-card {
-        padding: 18px;
-    }
+    .sams-card { padding: 18px; }
 }
