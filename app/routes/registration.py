@@ -38,14 +38,16 @@ def public_registration():
             errors = []
             if not full_name or len(full_name) > 120:
                 errors.append("Enter the student's full name (up to 120 characters).")
-            if not requested_class or len(requested_class) > 80:
-                errors.append("Enter the class the student is applying to join (up to 80 characters).")
+            if requested_level not in {"L3", "L4", "L5"}:
+                errors.append("Choose a valid level: L3, L4, or L5.")
+            if requested_trade != "Software Development":
+                errors.append("Choose Software Development as the trade.")
 
             if not errors:
                 connection.execute(
                     """INSERT INTO student_registration_requests
-                       (full_name, requested_class)
-                       VALUES (?, ?)""",
+                       (full_name, requested_class, requested_level, requested_trade)
+                       VALUES (?, ?, ?, ?)""",
                     (full_name, requested_class, requested_level, requested_trade),
                 )
                 return render_template("registration/received.html"), 200
@@ -55,7 +57,8 @@ def public_registration():
                 is_open=True,
                 errors=errors,
                 full_name=full_name,
-                requested_level=requested_level,\n                requested_trade=requested_trade,
+                requested_level=requested_level,
+                requested_trade=requested_trade,
             ), 400
 
     response = render_template("registration/public.html", is_open=is_open)
@@ -136,7 +139,7 @@ def approve_registration(request_id):
         with get_connection() as connection:
             connection.execute("BEGIN IMMEDIATE")
             application = connection.execute(
-                """SELECT id, full_name, requested_class, status
+                """SELECT id, full_name, requested_class, requested_level, requested_trade, status
                    FROM student_registration_requests WHERE id = ?""",
                 (request_id,),
             ).fetchone()
@@ -148,9 +151,10 @@ def approve_registration(request_id):
                 return redirect(url_for("registration.manage_registration"))
 
             cursor = connection.execute(
-                """INSERT INTO students (student_id, full_name, class_name)
-                   VALUES (?, ?, ?)""",
-                (student_id, application["full_name"], application["requested_class"],\n                 application["requested_level"], application["requested_trade"]),
+                """INSERT INTO students (student_id, full_name, class_name, level, trade)
+                   VALUES (?, ?, ?, ?, ?)""",
+                (student_id, application["full_name"], application["requested_class"],
+                 application["requested_level"], application["requested_trade"]),
             )
             create_student_account(connection, cursor.lastrowid, student_id)
             connection.execute(
