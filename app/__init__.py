@@ -82,6 +82,7 @@ def create_app():
     from app.routes.admin_security import admin_security_bp
     from app.routes.security import security_bp
     from app.routes.student import student_bp
+    from app.routes.registration import registration_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(gate_bp)
@@ -90,6 +91,7 @@ def create_app():
     app.register_blueprint(admin_security_bp)
     app.register_blueprint(security_bp)
     app.register_blueprint(student_bp)
+    app.register_blueprint(registration_bp)
 
     from app.commands import register_commands
     register_commands(app)
