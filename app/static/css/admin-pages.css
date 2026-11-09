@@ -38,3 +38,27 @@
 @media (max-width: 1050px) { .attendance-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }.admin-overview-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 700px) { .admin-signout { flex-direction: column; align-items: flex-end; gap: 6px; }.signed-in-name { max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.management-toolbar { align-items: flex-start; flex-direction: column; }.attendance-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }.admin-overview-grid { grid-template-columns: 1fr; }.session-details { grid-template-columns: repeat(2, minmax(0, 1fr)); }.record-form { grid-template-columns: 1fr; padding: 17px; }.form-actions { grid-column: auto; }.form-card > .section-header { padding: 18px 17px 3px; }.report-summary { gap: 8px; }.report-stat { padding: 13px; }.report-stat strong { font-size: 20px; } }
 @media (max-width: 440px) { .attendance-filters { grid-template-columns: 1fr; }.profile-heading { flex-direction: column; }.report-summary { grid-template-columns: 1fr; }.report-stat { grid-template-columns: 1fr auto; align-items: center; }.report-stat strong { grid-column: 2; grid-row: 1 / span 2; }.report-stat small { grid-column: 1; } }
+
+
+/* Public student registration management */
+.registration-control-card { margin-bottom: 15px; }
+.registration-control-card .section-header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:19px 21px 14px; }
+.registration-control-card .section-header h2 { margin:0 0 5px; }
+.registration-control-card .section-header p:not(.section-kicker) { margin:0; color:var(--muted); font-size:10px; }
+.registration-control-body { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:15px 21px 20px; border-top:1px solid var(--border); }
+.registration-control-body > div { max-width:620px; }
+.registration-control-body > div > strong { font-size:13px; }
+.registration-control-body .subtle-text { margin:6px 0 10px; line-height:1.6; }
+.registration-control-body form { flex:0 0 auto; }
+.registration-review-actions { display:grid; gap:8px; min-width:210px; }
+.registration-review-actions form { display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+.registration-review-actions input { width:140px; min-width:0; min-height:32px; padding:6px 8px; border:1px solid var(--border); border-radius:6px; background:var(--surface); color:var(--text); font:inherit; font-size:9px; }
+.registration-review-actions .button-primary { min-height:32px; padding:0 9px; font-size:9px; }
+.registration-review-actions .danger-button { padding:0 9px; }
+.account-status.pending { background:#fff5df; color:#8a641c; }
+.visually-hidden { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+@media (max-width:700px) {
+    .registration-control-card .section-header,.registration-control-body { align-items:flex-start; flex-direction:column; }
+    .registration-control-body form,.registration-control-body form button { width:100%; }
+    .registration-review-actions { min-width:0; }
+}
