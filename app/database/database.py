@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 DATABASE_PATH = Path(__file__).resolve().parents[2] / "instance" / "sams.db"
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 
 @contextmanager
@@ -322,6 +322,42 @@ def _apply_student_portal_schema(connection):
     """)
 
 
+
+def _apply_student_registration_schema(connection):
+    connection.execute("""
+        CREATE TABLE IF NOT EXISTS student_registration_settings (
+            id INTEGER PRIMARY KEY CHECK (id = 1),
+            is_open INTEGER NOT NULL DEFAULT 0 CHECK (is_open IN (0, 1)),
+            updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_by INTEGER,
+            FOREIGN KEY (updated_by) REFERENCES administrators(id)
+        )
+    """)
+    connection.execute("""
+        INSERT OR IGNORE INTO student_registration_settings (id, is_open)
+        VALUES (1, 0)
+    """)
+    connection.execute("""
+        CREATE TABLE IF NOT EXISTS student_registration_requests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            full_name TEXT NOT NULL,
+            requested_class TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'pending'
+                CHECK (status IN ('pending', 'approved', 'rejected')),
+            submitted_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            reviewed_at TEXT,
+            reviewed_by INTEGER,
+            assigned_student_pk INTEGER,
+            FOREIGN KEY (reviewed_by) REFERENCES administrators(id),
+            FOREIGN KEY (assigned_student_pk) REFERENCES students(id)
+        )
+    """)
+    connection.execute("""
+        CREATE INDEX IF NOT EXISTS idx_student_registration_status
+        ON student_registration_requests(status, submitted_at DESC)
+    """)
+
+
 def initialize_database():
     with get_connection() as connection:
         if not _table_exists(connection, "students"):
@@ -375,6 +411,8 @@ def initialize_database():
                 _apply_admin_recovery_schema(connection)
             elif next_version == 3:
                 _apply_student_portal_schema(connection)
+            elif next_version == 4:
+                _apply_student_registration_schema(connection)
             connection.execute(
                 "INSERT INTO schema_migrations (version) VALUES (?)",
                 (next_version,),
