@@ -14,18 +14,14 @@
         .registration-copy,.registration-note{color:#aebbd0;line-height:1.7;font-size:14px}
         .registration-field{display:grid;gap:8px;margin:22px 0}
         .registration-field label{color:#eaf0fb;font-size:13px;font-weight:700}
-        .registration-field input{width:100%;min-height:48px;padding:12px 14px;border:1px solid #344663;border-radius:9px;background:#0b1423;color:#fff;font:inherit}
-        .registration-field input:focus{outline:3px solid #3978ed55;border-color:#5790ff}
+        .registration-field input,.registration-field select{width:100%;min-height:48px;padding:12px 14px;border:1px solid #344663;border-radius:9px;background:#0b1423;color:#fff;font:inherit}
+        .registration-field input:focus,.registration-field select:focus{outline:3px solid #3978ed55;border-color:#5790ff}
         .registration-submit{width:100%;min-height:48px;border:0;border-radius:9px;background:#3478f6;color:white;font-weight:750;font-size:14px;cursor:pointer}
         .registration-errors{padding:12px 16px;border:1px solid #8e4a4a;border-radius:9px;background:#3a2027;color:#ffd9d9}
-        .registration-errors li{margin:4px 0}
-        .registration-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-        .registration-top a{color:#9bbcff;text-decoration:none;font-size:13px}
-        .registration-kicker{color:#77a8ff;font-size:11px;font-weight:800;letter-spacing:1.5px}
-        .registration-closed{text-align:center;padding:24px 0}
-        .registration-closed .closed-mark{font-size:38px;color:#80aaff}
-        .registration-closed h1{font-size:30px}
-        .registration-note{margin-top:20px;font-size:12px}
+        .registration-errors li{margin:4px 0}.registration-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+        .registration-top a{color:#9bbcff;text-decoration:none;font-size:13px}.registration-kicker{color:#77a8ff;font-size:11px;font-weight:800;letter-spacing:1.5px}
+        .registration-closed{text-align:center;padding:24px 0}.registration-closed .closed-mark{font-size:38px;color:#80aaff}
+        .registration-closed h1{font-size:30px}.registration-note{margin-top:20px;font-size:12px}
         .registration-honeypot{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
     </style>
 </head>
@@ -38,15 +34,15 @@
         <div class="registration-top"><span class="registration-kicker">SCHOOL ADMISSIONS</span><a href="{{ url_for('main.home') }}">← Back to SAMS</a></div>
         <section class="registration-card">
         {% if is_open %}
-            <p class="registration-kicker">NEW STUDENT APPLICATION</p>
-            <h1>Start your registration</h1>
-            <p class="registration-copy">Complete this short form to submit a new-student application. The school will review the details before adding the student to the official register.</p>
+            <p class="registration-kicker">NEW STUDENT APPLICATION</p><h1>Start your registration</h1>
+            <p class="registration-copy">Choose the student's level and trade, then enter their details. The school will review the application before admission.</p>
             {% if errors %}<div class="registration-errors" role="alert"><ul>{% for error in errors %}<li>{{ error }}</li>{% endfor %}</ul></div>{% endif %}
             <form method="post" action="{{ url_for('registration.public_registration') }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="registration-honeypot" aria-hidden="true"><label for="website">Leave this field empty</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+                <div class="registration-field"><label for="requested_level">Choose level</label><select id="requested_level" name="requested_level" required><option value="">Select level</option>{% for level in ['L3','L4','L5'] %}<option value="{{ level }}" {% if requested_level|default('') == level %}selected{% endif %}>{{ level }}</option>{% endfor %}</select></div>
+                <div class="registration-field"><label for="requested_trade">Choose trade</label><select id="requested_trade" name="requested_trade" required><option value="">Select trade</option><option value="Software Development" {% if requested_trade|default('') == 'Software Development' %}selected{% endif %}>Software Development</option></select></div>
                 <div class="registration-field"><label for="full_name">Student's full name</label><input id="full_name" name="full_name" maxlength="120" value="{{ full_name|default('') }}" autocomplete="name" required></div>
-                <div class="registration-field"><label for="requested_class">Class applying for</label><input id="requested_class" name="requested_class" maxlength="80" value="{{ requested_class|default('') }}" placeholder="e.g. L4 SWD" required></div>
                 <button class="registration-submit" type="submit">Submit application</button>
             </form>
             <p class="registration-note">Submitting this form does not mean admission is confirmed. The school administrator must review and approve the application.</p>
