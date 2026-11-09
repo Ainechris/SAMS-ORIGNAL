@@ -168,7 +168,7 @@ def edit_student(student_pk):
 
     if request.method == "POST":
         try:
-            student_id, full_name, class_name = _student_form_values()
+            student_id, full_name, class_name, level, trade = _student_form_values()
             with get_connection() as connection:
                 connection.execute(
                     """UPDATE student_accounts SET username = ?,
