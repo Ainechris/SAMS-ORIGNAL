@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 DATABASE_PATH = Path(__file__).resolve().parents[2] / "instance" / "sams.db"
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 
 @contextmanager
@@ -355,6 +355,39 @@ def _apply_student_registration_schema(connection):
     connection.execute("""
         CREATE INDEX IF NOT EXISTS idx_student_registration_status
         ON student_registration_requests(status, submitted_at DESC)
+    """)
+
+
+
+def _apply_student_level_trade_schema(connection):
+    student_columns = {row["name"] for row in connection.execute("PRAGMA table_info(students)")}
+    if "level" not in student_columns:
+        connection.execute("ALTER TABLE students ADD COLUMN level TEXT")
+    if "trade" not in student_columns:
+        connection.execute("ALTER TABLE students ADD COLUMN trade TEXT")
+
+    request_columns = {row["name"] for row in connection.execute("PRAGMA table_info(student_registration_requests)")}
+    if "requested_level" not in request_columns:
+        connection.execute("ALTER TABLE student_registration_requests ADD COLUMN requested_level TEXT")
+    if "requested_trade" not in request_columns:
+        connection.execute("ALTER TABLE student_registration_requests ADD COLUMN requested_trade TEXT")
+
+    # Preserve old records and identify the level/trade where the old class text allows it.
+    connection.execute("""
+        UPDATE students
+        SET level = UPPER(SUBSTR(TRIM(class_name), 1, 2)),
+            trade = 'Software Development'
+        WHERE level IS NULL
+          AND UPPER(TRIM(class_name)) GLOB 'L[345]*'
+          AND UPPER(class_name) LIKE '%SWD%'
+    """)
+    connection.execute("""
+        UPDATE student_registration_requests
+        SET requested_level = UPPER(SUBSTR(TRIM(requested_class), 1, 2)),
+            requested_trade = 'Software Development'
+        WHERE requested_level IS NULL
+          AND UPPER(TRIM(requested_class)) GLOB 'L[345]*'
+          AND UPPER(requested_class) LIKE '%SWD%'
     """)
 
 
