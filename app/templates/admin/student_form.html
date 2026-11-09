@@ -8,7 +8,8 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-field"><label for="student_id">Student ID</label><input id="student_id" name="student_id" type="text" maxlength="50" value="{{ request.form.get('student_id', student.student_id if student else '') }}" placeholder="e.g. SAMS001" required><small>Use the student’s assigned school ID.</small></div>
         <div class="form-field"><label for="full_name">Full name</label><input id="full_name" name="full_name" type="text" maxlength="120" value="{{ request.form.get('full_name', student.full_name if student else '') }}" autocomplete="name" required></div>
-        <div class="form-field"><label for="class_name">Class</label><input id="class_name" name="class_name" type="text" maxlength="80" value="{{ request.form.get('class_name', student.class_name if student else '') }}" required></div>
+        <div class="form-field"><label for="level">Level</label><select id="level" name="level" required><option value="">Choose level</option>{% for level in ['L3','L4','L5'] %}<option value="{{ level }}" {% if request.form.get('level', student.level if student else '') == level %}selected{% endif %}>{{ level }}</option>{% endfor %}</select></div>
+        <div class="form-field"><label for="trade">Trade</label><select id="trade" name="trade" required><option value="">Choose trade</option><option value="Software Development" {% if request.form.get('trade', student.trade if student else '') == 'Software Development' %}selected{% endif %}>Software Development</option></select></div>
         <div class="form-actions"><button class="button-primary" type="submit">{% if student %}Save changes{% else %}Register student{% endif %}</button><a class="button-secondary" href="{{ url_for('admin_students.list_students') }}">Cancel</a></div>
     </form>
 </section>
