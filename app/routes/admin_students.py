@@ -17,7 +17,7 @@ STUDENT_ID_PATTERN = re.compile(r"^[A-Z0-9-]{1,50}$")
 def _student_form_values():
     student_id = request.form.get("student_id", "").strip().upper()
     full_name = request.form.get("full_name", "").strip()
-    class_name = request.form.get("class_name", "").strip()
+    level = request.form.get("level", "").strip().upper()\n    trade = request.form.get("trade", "").strip()\n    class_name = f"{level} - {trade}" if level and trade else ""
     if not STUDENT_ID_PATTERN.fullmatch(student_id):
         raise ValueError("Student ID may contain letters, numbers, and hyphens (up to 50 characters).")
     if not full_name or len(full_name) > 120:
@@ -87,14 +87,14 @@ def list_students():
 def create_student():
     if request.method == "POST":
         try:
-            student_id, full_name, class_name = _student_form_values()
+            student_id, full_name, class_name, level, trade = _student_form_values()
             with get_connection() as connection:
                 cursor = connection.execute(
                     """
                     INSERT INTO students (student_id, full_name, class_name)
                     VALUES (?, ?, ?)
                     """,
-                    (student_id, full_name, class_name),
+                    (student_id, full_name, class_name, level, trade),
                 )
                 create_student_account(connection, cursor.lastrowid, student_id)
                 audit_event(
@@ -176,7 +176,7 @@ def edit_student(student_pk):
                     UPDATE students SET student_id = ?, full_name = ?, class_name = ?
                     WHERE id = ?
                     """,
-                    (student_id, full_name, class_name, student_pk),
+                    (student_id, full_name, class_name, level, trade, student_pk),
                 )
                 audit_event(
                     connection, "admin", g.current_user["id"], "student_update", "success",
