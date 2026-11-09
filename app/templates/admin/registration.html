@@ -1,0 +1,44 @@
+{% extends "admin/shell.html" %}
+{% block document_title %}Student registration{% endblock %}
+{% block admin_content %}
+<section class="content-card registration-control-card">
+    <div class="section-header"><div><p class="section-kicker">PUBLIC ADMISSIONS</p><h2>Registration portal control</h2><p>Choose when people can submit new-student applications.</p></div>
+    <span class="session-status-pill {% if settings.is_open %}active{% else %}closed{% endif %}"><i></i>{% if settings.is_open %}Public form is open{% else %}Public form is closed{% endif %}</span></div>
+    <div class="registration-control-body">
+        <div><strong>{% if settings.is_open %}Applications are being accepted{% else %}Applications are not being accepted{% endif %}</strong><p class="subtle-text">When open, anyone with the registration link can submit an application. Every application remains pending until you review it.</p><a class="table-action" href="{{ url_for('registration.public_registration') }}" target="_blank" rel="noopener">Preview public registration page ↗</a></div>
+        <form method="post" action="{{ url_for('registration.toggle_registration') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% if settings.is_open %}<button class="button-secondary" name="action" value="close" type="submit">Close registration</button>{% else %}<button class="button-primary" name="action" value="open" type="submit">Open registration</button>{% endif %}
+        </form>
+    </div>
+</section>
+
+<section class="content-card admin-table-card registration-requests-card">
+    <div class="section-header"><div><p class="section-kicker">APPLICATION REVIEW</p><h2>{{ pending_count }} pending applications</h2><p>Approve a request to create the student record, or reject it.</p></div></div>
+    <div class="table-wrapper"><table class="management-table"><thead><tr><th>Applicant</th><th>Requested class</th><th>Submitted</th><th>Status</th><th>Review action</th></tr></thead><tbody>
+    {% for item in requests %}
+        <tr>
+            <td class="student-name">{{ item.full_name }}</td><td>{{ item.requested_class }}</td><td>{{ item.submitted_at }}</td>
+            <td><span class="account-status {% if item.status == 'approved' %}active{% elif item.status == 'rejected' %}disabled{% else %}pending{% endif %}">{{ item.status|title }}</span></td>
+            <td>
+            {% if item.status == 'pending' %}
+                <div class="registration-review-actions">
+                    <form method="post" action="{{ url_for('registration.approve_registration', request_id=item.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <label class="visually-hidden" for="student-id-{{ item.id }}">Assigned student ID</label>
+                        <input id="student-id-{{ item.id }}" name="student_id" maxlength="50" pattern="[A-Za-z0-9-]+" placeholder="Assign student ID" required>
+                        <button class="button-primary" type="submit">Approve & add</button>
+                    </form>
+                    <form method="post" action="{{ url_for('registration.reject_registration', request_id=item.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="danger-button" type="submit">Reject</button>
+                    </form>
+                </div>
+            {% elif item.status == 'approved' %}<span class="subtle-text">Added to student records</span>
+            {% else %}<span class="subtle-text">Not added to student records</span>{% endif %}
+            </td>
+        </tr>
+    {% else %}<tr><td colspan="5"><div class="empty-state"><strong>No applications yet</strong><p>Applications will appear here when the public registration page is open.</p></div></td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+{% endblock %}
