@@ -21,10 +21,13 @@
         </a>
 
         <nav class="home-nav" aria-label="Main navigation">
+            <a href="{{ url_for('main.how_it_works') }}">How the system works</a>
             <a class="nav-active" href="{{ url_for('main.home') }}" aria-current="page">Home</a>
-            <a href="{{ url_for('gate.gate') }}">Student Gate</a>
-            <a href="{{ url_for('admin.login') }}">Administrator sign in</a>
-            <a href="{{ url_for('security.login') }}">Security sign in</a>
+            <a href="{{ url_for('student.login') }}">Student Portal</a>
+            <a href="{{ url_for('gate.gate') }}">Sign up for gate</a>
+            {% if registration_open %}
+            <a class="nav-registration" href="{{ url_for('registration.public_registration') }}">Student Registration</a>
+            {% endif %}
         </nav>
     </header>
 
