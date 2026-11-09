@@ -19,4 +19,12 @@ def home():
 
 @main_bp.route("/how-it-works")
 def how_it_works():
-    return render_template("how_it_works.html")
+    with get_connection() as connection:
+        row = connection.execute(
+            "SELECT is_open FROM student_registration_settings WHERE id = 1"
+        ).fetchone()
+    registration_open = bool(row and row["is_open"])
+    return render_template(
+        "how_it_works.html",
+        registration_open=registration_open,
+    )
