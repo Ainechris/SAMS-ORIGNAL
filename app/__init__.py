@@ -64,6 +64,7 @@ def create_app():
             request.endpoint.startswith("admin.")
             or request.endpoint.startswith("security.")
             or request.endpoint.startswith("student.")
+            or request.endpoint in {"registration.manage_registration"}
         ):
             response.headers["Cache-Control"] = "no-store"
         return response
