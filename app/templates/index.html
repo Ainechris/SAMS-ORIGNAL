@@ -41,7 +41,7 @@
                     <h2 id="available-title">Available workspaces</h2>
                     <p>Open the kiosk or continue to a protected staff workspace.</p>
                 </div>
-                <span class="section-count">04 available</span>
+                <span class="section-count">{% if registration_open %}05{% else %}04{% endif %} available</span>
             </div>
 
             <div class="workspace-grid">
@@ -99,6 +99,21 @@
                     <span class="workspace-action">Continue to student sign in <span aria-hidden="true">→</span></span>
                     <span class="card-corner" aria-hidden="true">↗</span>
                 </a>
+                {% if registration_open %}
+                <a class="workspace-card student-card" href="{{ url_for('registration.public_registration') }}">
+                    <div class="workspace-card-top">
+                        <span class="workspace-icon student-planned-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                        </span>
+                        <span class="availability"><i></i> Applications open</span>
+                    </div>
+                    <p class="workspace-category">SCHOOL ADMISSIONS</p>
+                    <h3>New Student Registration</h3>
+                    <p class="workspace-description">Submit an application to join the school. The school will review it before adding an official student record.</p>
+                    <span class="workspace-action">Start student application <span aria-hidden="true">→</span></span>
+                    <span class="card-corner" aria-hidden="true">↗</span>
+                </a>
+                {% endif %}
             </div>
         </section>
 
