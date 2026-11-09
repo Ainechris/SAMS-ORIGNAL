@@ -32,7 +32,9 @@ def public_registration():
                 return render_template("registration/received.html"), 200
 
             full_name = request.form.get("full_name", "").strip()
-            requested_class = request.form.get("requested_class", "").strip()
+            requested_level = request.form.get("requested_level", "").strip().upper()
+            requested_trade = request.form.get("requested_trade", "").strip()
+            requested_class = f"{requested_level} - {requested_trade}" if requested_level and requested_trade else ""
             errors = []
             if not full_name or len(full_name) > 120:
                 errors.append("Enter the student's full name (up to 120 characters).")
@@ -44,7 +46,7 @@ def public_registration():
                     """INSERT INTO student_registration_requests
                        (full_name, requested_class)
                        VALUES (?, ?)""",
-                    (full_name, requested_class),
+                    (full_name, requested_class, requested_level, requested_trade),
                 )
                 return render_template("registration/received.html"), 200
 
@@ -53,7 +55,7 @@ def public_registration():
                 is_open=True,
                 errors=errors,
                 full_name=full_name,
-                requested_class=requested_class,
+                requested_level=requested_level,\n                requested_trade=requested_trade,
             ), 400
 
     response = render_template("registration/public.html", is_open=is_open)
@@ -71,7 +73,7 @@ def manage_registration():
             "SELECT is_open, updated_at FROM student_registration_settings WHERE id = 1"
         ).fetchone()
         requests = connection.execute(
-            """SELECT id, full_name, requested_class, status, submitted_at
+            """SELECT id, full_name, requested_class, requested_level, requested_trade, status, submitted_at
                FROM student_registration_requests
                ORDER BY CASE status WHEN 'pending' THEN 0 ELSE 1 END,
                         submitted_at DESC
@@ -148,7 +150,7 @@ def approve_registration(request_id):
             cursor = connection.execute(
                 """INSERT INTO students (student_id, full_name, class_name)
                    VALUES (?, ?, ?)""",
-                (student_id, application["full_name"], application["requested_class"]),
+                (student_id, application["full_name"], application["requested_class"],\n                 application["requested_level"], application["requested_trade"]),
             )
             create_student_account(connection, cursor.lastrowid, student_id)
             connection.execute(
