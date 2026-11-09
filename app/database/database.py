@@ -446,6 +446,8 @@ def initialize_database():
                 _apply_student_portal_schema(connection)
             elif next_version == 4:
                 _apply_student_registration_schema(connection)
+            elif next_version == 5:
+                _apply_student_level_trade_schema(connection)
             connection.execute(
                 "INSERT INTO schema_migrations (version) VALUES (?)",
                 (next_version,),
