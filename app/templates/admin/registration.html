@@ -15,10 +15,10 @@
 
 <section class="content-card admin-table-card registration-requests-card">
     <div class="section-header"><div><p class="section-kicker">APPLICATION REVIEW</p><h2>{{ pending_count }} pending applications</h2><p>Approve a request to create the student record, or reject it.</p></div></div>
-    <div class="table-wrapper"><table class="management-table"><thead><tr><th>Applicant</th><th>Requested class</th><th>Submitted</th><th>Status</th><th>Review action</th></tr></thead><tbody>
+    <div class="table-wrapper"><table class="management-table"><thead><tr><th>Applicant</th><th>Level</th><th>Trade</th><th>Submitted</th><th>Status</th><th>Review action</th></tr></thead><tbody>
     {% for item in requests %}
         <tr>
-            <td class="student-name">{{ item.full_name }}</td><td>{{ item.requested_class }}</td><td>{{ item.submitted_at }}</td>
+            <td class="student-name">{{ item.full_name }}</td><td>{{ item.requested_level or "—" }}</td><td>{{ item.requested_trade or item.requested_class }}</td><td>{{ item.submitted_at }}</td>
             <td><span class="account-status {% if item.status == 'approved' %}active{% elif item.status == 'rejected' %}disabled{% else %}pending{% endif %}">{{ item.status|title }}</span></td>
             <td>
             {% if item.status == 'pending' %}
@@ -38,7 +38,7 @@
             {% else %}<span class="subtle-text">Not added to student records</span>{% endif %}
             </td>
         </tr>
-    {% else %}<tr><td colspan="5"><div class="empty-state"><strong>No applications yet</strong><p>Applications will appear here when the public registration page is open.</p></div></td></tr>{% endfor %}
+    {% else %}<tr><td colspan="6"><div class="empty-state"><strong>No applications yet</strong><p>Applications will appear here when the public registration page is open.</p></div></td></tr>{% endfor %}
     </tbody></table></div>
 </section>
 {% endblock %}
