@@ -145,3 +145,106 @@
 @media (prefers-reduced-motion: reduce) {
     .home-page *, .home-page *::before, .home-page *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+
+/* SAMS dark navy + electric blue homepage refresh */
+.home-page {
+    --home-page: #080d18;
+    --home-surface: #101a2b;
+    --home-text: #f3f7ff;
+    --home-muted: #a5b3c9;
+    --home-subtle: #71829d;
+    --home-border: #233653;
+    --home-blue: #4d8dff;
+    --home-blue-dark: #75aaff;
+    --home-blue-soft: #172e50;
+    --home-green: #55a9ff;
+    --home-green-soft: #172e50;
+    --home-violet: #83aaff;
+    --home-violet-soft: #1b2d4a;
+    background:
+        radial-gradient(ellipse at 12% 5%, rgb(34 102 214 / 18%), transparent 34%),
+        radial-gradient(ellipse at 90% 38%, rgb(20 75 160 / 12%), transparent 32%),
+        var(--home-page);
+}
+.home-header {
+    border-bottom-color: #1c2b43;
+    background: rgb(8 13 24 / 94%);
+    box-shadow: 0 8px 30px rgb(0 0 0 / 18%);
+}
+.home-logo {
+    background: linear-gradient(145deg, #4d8dff, #2456c5);
+    box-shadow: 0 6px 18px rgb(48 112 235 / 30%);
+}
+.brand-copy small { color: #8294b1; }
+.home-nav a { color: #9aabc5; }
+.home-nav a:hover, .home-nav a.nav-active { color: #78adff; }
+.home-nav a.nav-active::after { height: 3px; background: #4d8dff; box-shadow: 0 0 12px rgb(77 141 255 / 65%); }
+.eyebrow { color: #75aaff; }
+.eyebrow-mark { box-shadow: 0 0 12px rgb(77 141 255 / 80%); }
+.page-intro h1 { color: #f4f7ff; }
+.intro-copy, .section-heading p { color: #9aabc5; }
+.section-heading h2 { color: #e9f1ff; }
+.section-count, .planned-count {
+    border: 1px solid #29456c;
+    background: #142743;
+    color: #8dbaff;
+}
+.workspace-card {
+    border-color: #263b5b;
+    background: linear-gradient(155deg, #142137 0%, #0e192a 72%);
+    box-shadow: 0 12px 30px rgb(0 0 0 / 20%);
+}
+.workspace-card:hover {
+    transform: translateY(-4px);
+    border-color: #4d8dff;
+    box-shadow: 0 16px 38px rgb(0 0 0 / 32%), 0 0 0 1px rgb(77 141 255 / 12%);
+}
+.admin-icon, .gate-icon, .security-icon, .student-planned-icon, .teacher-planned-icon {
+    background: #1a3458;
+    color: #80b4ff;
+}
+.availability {
+    border: 1px solid #294c78;
+    background: #142d4d;
+    color: #8fc0ff;
+}
+.workspace-category { color: #7f9bc1; }
+.workspace-card h3 { color: #f1f6ff; }
+.workspace-description { color: #a4b3c9; }
+.workspace-action, .gate-card .workspace-action { color: #78adff; }
+.card-corner { color: #6e85a7; }
+.workspace-card:hover .card-corner { color: #8dbaff; }
+.planned-card {
+    border-color: #263b5b;
+    background: #101b2d;
+}
+.planned-title-row h3 { color: #e3edff; }
+.planned-copy p { color: #9aabc5; }
+.planned-badge {
+    border: 1px solid #29456c;
+    background: #172b49;
+    color: #91baff;
+}
+.help-note {
+    border-color: #29456c;
+    background: #111f34;
+}
+.help-icon {
+    background: #1d3d68;
+    color: #a6cbff;
+}
+.help-note p { color: #a5b3c9; }
+.help-note strong { color: #e5efff; }
+.home-footer {
+    border-top-color: #1c2b43;
+    background: #090f1c;
+}
+.footer-brand { color: #edf4ff !important; }
+.footer-brand span, .home-footer > a:last-child { color: #78adff; }
+.home-footer p { color: #788ba8; }
+.home-page a:focus-visible { outline-color: #75aaff; }
+.skip-link { background: #2456c5; }
+@media (max-width: 520px) {
+    .home-nav { border-top-color: #1c2b43; }
+}
