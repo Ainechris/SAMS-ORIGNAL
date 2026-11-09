@@ -132,6 +132,7 @@ def approve_registration(request_id):
 
     try:
         with get_connection() as connection:
+            connection.execute("BEGIN IMMEDIATE")
             application = connection.execute(
                 """SELECT id, full_name, requested_class, status
                    FROM student_registration_requests WHERE id = ?""",
