@@ -17,14 +17,18 @@ STUDENT_ID_PATTERN = re.compile(r"^[A-Z0-9-]{1,50}$")
 def _student_form_values():
     student_id = request.form.get("student_id", "").strip().upper()
     full_name = request.form.get("full_name", "").strip()
-    level = request.form.get("level", "").strip().upper()\n    trade = request.form.get("trade", "").strip()\n    class_name = f"{level} - {trade}" if level and trade else ""
+    level = request.form.get("level", "").strip().upper()
+    trade = request.form.get("trade", "").strip()
+    class_name = f"{level} - {trade}" if level and trade else ""
     if not STUDENT_ID_PATTERN.fullmatch(student_id):
         raise ValueError("Student ID may contain letters, numbers, and hyphens (up to 50 characters).")
     if not full_name or len(full_name) > 120:
         raise ValueError("Enter a student name (up to 120 characters).")
-    if not class_name or len(class_name) > 80:
-        raise ValueError("Enter a class name (up to 80 characters).")
-    return student_id, full_name, class_name
+    if level not in {"L3", "L4", "L5"}:
+        raise ValueError("Choose a valid level: L3, L4, or L5.")
+    if trade != "Software Development":
+        raise ValueError("Choose Software Development as the trade.")
+    return student_id, full_name, class_name, level, trade
 
 
 @admin_students_bp.route("/students")
@@ -91,8 +95,8 @@ def create_student():
             with get_connection() as connection:
                 cursor = connection.execute(
                     """
-                    INSERT INTO students (student_id, full_name, class_name)
-                    VALUES (?, ?, ?)
+                    INSERT INTO students (student_id, full_name, class_name, level, trade)
+                    VALUES (?, ?, ?, ?, ?)
                     """,
                     (student_id, full_name, class_name, level, trade),
                 )
@@ -155,7 +159,7 @@ def student_detail(student_pk):
 def edit_student(student_pk):
     with get_connection() as connection:
         student = connection.execute(
-            "SELECT id, student_id, full_name, class_name "
+            "SELECT id, student_id, full_name, class_name, level, trade "
             "FROM students WHERE id = ?",
             (student_pk,),
         ).fetchone()
@@ -173,7 +177,7 @@ def edit_student(student_pk):
                 )
                 connection.execute(
                     """
-                    UPDATE students SET student_id = ?, full_name = ?, class_name = ?
+                    UPDATE students SET student_id = ?, full_name = ?, class_name = ?, level = ?, trade = ?
                     WHERE id = ?
                     """,
                     (student_id, full_name, class_name, level, trade, student_pk),
